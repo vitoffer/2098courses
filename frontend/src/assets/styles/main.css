@@ -1,0 +1,11 @@
+@import './reset.css';
+@import './fonts.css';
+@import './variables.css';
+
+* {
+	color: var(--text-gray) ;
+}
+
+a, a:link, a:visited {
+	color: var(--link-color);
+}
