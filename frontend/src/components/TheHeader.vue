@@ -3,23 +3,24 @@
 <template>
 	<header class="header">
 		<div class="header__inner">
-			<a
-				href="https://sch2098s.mskobr.ru"
-				target="_blank"
-				class="header__logo logo"
-			>
-				<img
-					src="https://sch2098s.mskobr.ru/attach_files/logo/2098_logo_color%20%D0%BC%D0%B8%D0%BD.jpg"
-					alt="Эмблема школы"
-					width="80"
-					class="logo__image"
-				/>
-			</a>
 			<div class="header__branding branding">
-				<h1 class="branding__title">Каталог кружков</h1>
-				<h2 class="branding__description">
-					ГБОУ Школа №2098 имени Л. М. Доватора
-				</h2>
+				<a
+					href="https://sch2098s.mskobr.ru"
+					target="_blank"
+					class="branding__logo logo"
+				>
+					<img
+						src="https://sch2098s.mskobr.ru/attach_files/logo/2098_logo_color%20%D0%BC%D0%B8%D0%BD.jpg"
+						alt="Эмблема школы"
+						class="logo__image"
+					/>
+				</a>
+				<div class="branding__info-wrapper">
+					<h1 class="branding__title">Каталог кружков</h1>
+					<h2 class="branding__description">
+						ГБОУ Школа №2098 имени Л. М. Доватора
+					</h2>
+				</div>
 			</div>
 			<p class="header__contacts contacts">
 				Ответственная по воспитательной работе:
@@ -44,37 +45,65 @@
 		max-width: 1440px;
 		height: 100px;
 		margin: 0 auto;
-		padding-inline: 32px;
+		padding-inline: 16px;
+
+		@media (max-width: 1024px) {
+			flex-direction: column;
+			justify-content: center;
+			height: auto;
+		}
 	}
 
 	&__inner :not(a) {
 		color: var(--text-black);
 	}
 
-	&__logo {
-		margin-right: 24px;
-	}
-
 	&__branding {
+		position: relative;
+		display: flex;
+		align-items: center;
+
+		@media (max-width: 1024px) {
+			padding-block: 8px;
+			border-bottom: solid 1px var(--border-light-gray);
+			text-align: center;
+		}
+
 		.branding {
+			&__logo {
+				margin-right: clamp(24px, 3vw, 32px);
+
+				.logo {
+					&__image {
+						width: clamp(48px, 8vw, 80px);
+					}
+				}
+			}
+
 			&__title {
 				font: {
-					size: 2rem;
+					size: clamp(20px, 5vw, 32px);
 					weight: bold;
 				}
 				text-transform: uppercase;
 			}
 
 			&__description {
-				font-size: 1rem;
+				font-size: clamp(14px, 4vw, 16px);
 			}
 		}
 	}
 
 	&__contacts {
 		margin-left: auto;
-		font-size: 1rem;
+		font-size: clamp(12px, 3vw, 16px);
+		line-height: 1.4;
 		text-align: center;
+
+		@media (max-width: 1024px) {
+			margin: 0;
+			padding-block: 4px 8px;
+		}
 	}
 }
 
