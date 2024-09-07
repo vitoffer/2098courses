@@ -39,6 +39,13 @@
 
 <style scoped lang="scss">
 .header {
+	box-shadow: 0 2px 10px 0 rgba(0 0 0 / 0.1);
+	margin-bottom: 24px;
+
+	@media (max-width: 1024px) {
+		margin-bottom: 16px;
+	}
+
 	&__inner {
 		display: flex;
 		align-items: center;
