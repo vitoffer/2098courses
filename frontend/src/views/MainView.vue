@@ -10,15 +10,15 @@ const isFilterSectionShown = ref(window.innerWidth >= 768)
 const searchTextModel = ref()
 
 const filterFocusesModel = ref()
-const filterFocusesOptionsFetchUrl = `${import.meta.env.VITE_BASE_API_URL}/filters`
+const filterFocusesOptionsFetchUrl = `${import.meta.env.VITE_BASE_API_URL}/focus-filter-options`
 const filterFocusesOptions = ref()
 
 const filterAddressesModel = ref()
-const filterAddressesOptionsFetchUrl = `${import.meta.env.VITE_BASE_API_URL}/addresses`
+const filterAddressesOptionsFetchUrl = `${import.meta.env.VITE_BASE_API_URL}/address-filter-options`
 const filterAddressesOptions = ref()
 
 const filterTeachersModel = ref()
-const filterTeachersOptionsFetchUrl = `${import.meta.env.VITE_BASE_API_URL}/teachers`
+const filterTeachersOptionsFetchUrl = `${import.meta.env.VITE_BASE_API_URL}/teacher-filter-options`
 const filterTeachersOptions = ref()
 
 const filterAgeModel = ref()

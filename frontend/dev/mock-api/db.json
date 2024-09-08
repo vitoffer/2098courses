@@ -1,5 +1,5 @@
 {
-	"filters": [
+	"focus-filter-options": [
 		{
 			"name": "Физкультурная"
 		},
@@ -7,7 +7,7 @@
 			"name": "Техническая"
 		}
 	],
-	"addresses": [
+	"address-filter-options": [
 		{
 			"name": "Ангарская 22А"
 		},
@@ -18,7 +18,7 @@
 			"name": "Базовская 20А"
 		}
 	],
-	"teachers": [
+	"teacher-filter-options": [
 		{
 			"name": "Попова Алиса Евгеньевна"
 		},
@@ -28,6 +28,7 @@
 	],
 	"courses": [
 		{
+			"id": "1",
 			"name": "Название",
 			"focus": "Направленность",
 			"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam at tincidunt sapien. Quisque eget ante orci. Proin malesuada ex risus, quis faucibus ante rhoncus at. Pellentesque habitant morbi tristique",
