@@ -3,6 +3,7 @@ import { nextTick, onMounted, ref } from "vue"
 import MultiSelect from "primevue/multiselect"
 import Select from "primevue/select"
 import InputMask from "primevue/inputmask"
+import CourseCard from "@/components/CourseCard.vue"
 
 const isFilterSectionShown = ref(window.innerWidth >= 768)
 
@@ -38,6 +39,9 @@ const filterWeekdaysOptions = [
 
 const filterTimeModel = ref()
 
+const coursesListFetchUrl = `${import.meta.env.VITE_BASE_API_URL}/courses`
+const courseList = ref()
+
 onMounted(async () => {
 	const responseFocuses = await fetch(filterFocusesOptionsFetchUrl)
 	filterFocusesOptions.value = await responseFocuses.json()
@@ -47,6 +51,9 @@ onMounted(async () => {
 
 	const responseTeachers = await fetch(filterTeachersOptionsFetchUrl)
 	filterTeachersOptions.value = await responseTeachers.json()
+
+	const responseCourses = await fetch(coursesListFetchUrl)
+	courseList.value = await responseCourses.json()
 })
 
 async function checkMultiSelectItems() {
@@ -161,6 +168,13 @@ async function checkMultiSelectItems() {
 				</li>
 			</ul>
 		</section>
+		<section>
+			<CourseCard
+				v-for="course in courseList"
+				:key="course"
+				:course="course"
+			/>
+		</section>
 	</main>
 </template>
 
@@ -200,6 +214,8 @@ async function checkMultiSelectItems() {
 }
 
 .filter {
+	padding: 0 16px;
+
 	@media (max-width: 767px) {
 		display: flex;
 		flex-direction: column;

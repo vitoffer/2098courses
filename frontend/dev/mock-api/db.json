@@ -25,5 +25,23 @@
 		{
 			"name": "Гоптарь Евгений Андреевич"
 		}
+	],
+	"courses": [
+		{
+			"name": "Название",
+			"focus": "Направленность",
+			"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam at tincidunt sapien. Quisque eget ante orci. Proin malesuada ex risus, quis faucibus ante rhoncus at. Pellentesque habitant morbi tristique",
+			"address": "Ангарская 22А",
+			"teacher": "Гоптарь Евгений Андреевич",
+			"age": [
+				14
+			],
+			"schedule": {
+				"Пн": [
+					"17:30-18:30"
+				]
+			},
+			"price": "Бесплатно"
+		}
 	]
 }
