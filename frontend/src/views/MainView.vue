@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { nextTick, onMounted, ref } from "vue"
+import { computed, nextTick, onMounted, ref } from "vue"
 import MultiSelect from "primevue/multiselect"
 import Select from "primevue/select"
-import InputMask from "primevue/inputmask"
 import CourseCard from "@/components/CourseCard.vue"
+import type { Course, Weekday } from "@/types"
 
 const isFilterSectionShown = ref(window.innerWidth >= 768)
 
@@ -27,20 +27,114 @@ const filterPriceModel = ref()
 const filterPriceOptions = ["Платно", "Бесплатно"]
 
 const filterWeekdaysModel = ref()
-const filterWeekdaysOptions = [
-	"Понедельник",
-	"Вторник",
-	"Среда",
-	"Четверг",
-	"Пятница",
-	"Суббота",
-	"Воскресенье",
+const filterWeekdaysOptions: Weekday[] = [
+	"Пн",
+	"Вт",
+	"Ср",
+	"Чт",
+	"Пт",
+	"Сб",
+	"Вс",
 ]
 
 const filterTimeModel = ref()
 
 const coursesListFetchUrl = `${import.meta.env.VITE_BASE_API_URL}/courses`
 const courseList = ref()
+
+const filteredCourseList = computed(() => {
+	return courseList.value?.filter((course: Course) => {
+		let isSatisfyName,
+			isSatisfyFocus,
+			isSatisfyAddress,
+			isSatisfyTeacher,
+			isSatisfyAge,
+			isSatisfyPrice,
+			isSatisfyWeekday,
+			isSatisfyTime
+
+		isSatisfyName =
+			isSatisfyFocus =
+			isSatisfyAddress =
+			isSatisfyTeacher =
+			isSatisfyAge =
+			isSatisfyPrice =
+			isSatisfyWeekday =
+			isSatisfyTime =
+				true
+
+		if (searchTextModel.value) {
+			isSatisfyName = course.name
+				.toLowerCase()
+				.includes(searchTextModel.value.toLowerCase())
+		}
+
+		if (filterFocusesModel.value?.length > 0) {
+			isSatisfyFocus = filterFocusesModel.value.some(
+				(focus: { name: string }) => {
+					return course.focus === focus.name
+				},
+			)
+		}
+
+		if (filterAddressesModel.value?.length > 0) {
+			isSatisfyAddress = filterAddressesModel.value.some(
+				(address: { name: string }) => {
+					return course.address === address.name
+				},
+			)
+		}
+
+		if (filterTeachersModel.value?.length > 0) {
+			isSatisfyTeacher = filterTeachersModel.value.some(
+				(teacher: { name: string }) => {
+					return course.teacher === teacher.name
+				},
+			)
+		}
+
+		if (filterAgeModel.value) {
+			isSatisfyAge = course.age.includes(filterAgeModel.value)
+		}
+
+		if (filterPriceModel.value) {
+			isSatisfyPrice = course.price.includes(filterPriceModel.value)
+		}
+
+		if (filterWeekdaysModel.value?.length > 0) {
+			isSatisfyWeekday = filterWeekdaysModel.value.some((weekday: string) => {
+				return Object.keys(course.schedule).includes(weekday)
+			})
+		}
+
+		if (filterTimeModel.value) {
+			if (filterWeekdaysModel.value) {
+				isSatisfyTime = filterWeekdaysModel.value.some((weekday: Weekday) => {
+					return course.schedule[weekday]?.some((timeString) => {
+						return timeString.includes(filterTimeModel.value)
+					})
+				})
+			} else {
+				isSatisfyTime = Object.values(course.schedule).some((timeArray) => {
+					return timeArray.some((timeString) =>
+						timeString.includes(filterTimeModel.value),
+					)
+				})
+			}
+		}
+
+		return (
+			isSatisfyName &&
+			isSatisfyFocus &&
+			isSatisfyAddress &&
+			isSatisfyTeacher &&
+			isSatisfyAge &&
+			isSatisfyPrice &&
+			isSatisfyWeekday &&
+			isSatisfyTime
+		)
+	})
+})
 
 onMounted(async () => {
 	const responseFocuses = await fetch(filterFocusesOptionsFetchUrl)
@@ -136,7 +230,7 @@ async function checkMultiSelectItems() {
 						placeholder="Возраст (введите числом)"
 						size="22"
 						class="filter-item__input base-input"
-						v-model="filterAgeModel"
+						v-model.lazy.number="filterAgeModel"
 					/>
 				</li>
 				<li>
@@ -159,21 +253,24 @@ async function checkMultiSelectItems() {
 					/>
 				</li>
 				<li>
-					<InputMask
-						class="filter-item__input"
-						v-model="filterTimeModel"
-						mask="99:99"
-						placeholder="Время"
+					<input
+						type="text"
+						placeholder="Время в формате AA:AA"
+						class="filter-item__input base-input"
+						v-model.lazy="filterTimeModel"
 					/>
 				</li>
 			</ul>
 		</section>
 		<section>
-			<CourseCard
-				v-for="course in courseList"
-				:key="course"
-				:course="course"
-			/>
+			<ul class="courses-list">
+				<li
+					v-for="course in filteredCourseList"
+					:key="course"
+				>
+					<CourseCard :course="course" />
+				</li>
+			</ul>
 		</section>
 	</main>
 </template>
@@ -214,6 +311,7 @@ async function checkMultiSelectItems() {
 }
 
 .filter {
+	margin-block: 8px 12px;
 	padding: 0 16px;
 
 	@media (max-width: 767px) {
@@ -226,6 +324,7 @@ async function checkMultiSelectItems() {
 
 	&__button {
 		display: none;
+
 		padding: 8px;
 		line-height: 0;
 		background-color: var(--blue-primary);
@@ -242,7 +341,7 @@ async function checkMultiSelectItems() {
 	}
 
 	&__title {
-		margin-block: 8px;
+		margin-bottom: 8px;
 		font-size: 0.875rem;
 		line-height: 1.4;
 		text-align: center;
@@ -262,7 +361,8 @@ async function checkMultiSelectItems() {
 	}
 
 	&-item__input {
-		width: fit-content;
+		width: 250px;
+		transition-duration: 0.2s;
 	}
 }
 
@@ -295,12 +395,12 @@ $active-border: solid 1px var(--blue-primary) !important;
 	color: var(--text-light-gray);
 }
 
-.filter-item__input {
-	transition-duration: 0.2s;
-}
-
-.filter-item__input {
-	width: 250px;
+.courses-list {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 16px;
+	padding: 0 16px;
 }
 </style>
 
