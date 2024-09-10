@@ -1,61 +1,24 @@
 <script setup lang="ts">
-import { ref } from "vue"
-import SearchSection from "@/components/main-view-sections/SearchSection.vue"
-import FiltersSection from "@/components/main-view-sections/FiltersSection.vue"
-import CoursesSection from "@/components/main-view-sections/CoursesSection.vue"
+import FilterList from "@/components/FilterList.vue"
 
-const isFiltersSectionVisible = ref(window.innerWidth >= 768)
+defineProps<{
+	isFiltersSectionVisible: boolean
+}>()
 </script>
 
 <template>
-	<main class="container">
-		<SearchSection
-			:is-filters-section-visible="isFiltersSectionVisible"
-			@toggle-filter-section-visibility="
-				isFiltersSectionVisible = !isFiltersSectionVisible
-			"
-		/>
-
-		<FiltersSection :is-filters-section-visible="isFiltersSectionVisible" />
-		<CoursesSection />
-	</main>
+	<section
+		class="filter"
+		:style="{
+			display: isFiltersSectionVisible ? 'block' : 'none',
+		}"
+	>
+		<p class="filter__title">Фильтры:</p>
+		<FilterList />
+	</section>
 </template>
 
 <style scoped lang="scss">
-.container {
-	max-width: 1440px;
-	margin: 0 auto;
-}
-
-.search {
-	&-wrapper {
-		display: flex;
-		justify-content: center;
-		gap: 8px;
-		padding: 0 16px;
-	}
-
-	&-bar {
-		display: block;
-		width: 600px;
-		margin: 0 auto;
-
-		@media (max-width: 767px) {
-			width: 80vw;
-			margin: 0;
-		}
-
-		@media (max-width: 480px) {
-			width: 90vw;
-			padding-inline: 8px;
-		}
-	}
-}
-
-.search-bar::placeholder {
-	color: var(--text-light-gray);
-}
-
 .filter {
 	margin-block: 8px 12px;
 	padding: 0 16px;
@@ -66,24 +29,6 @@ const isFiltersSectionVisible = ref(window.innerWidth >= 768)
 		margin-top: 8px;
 		padding-block: 8px;
 		background-color: var(--border-light-gray);
-	}
-
-	&__button {
-		display: none;
-
-		padding: 8px;
-		line-height: 0;
-		background-color: var(--blue-primary);
-		border-radius: 10px;
-
-		.pi-filter {
-			font-size: 1rem;
-			color: var(--text-white);
-		}
-
-		@media (max-width: 767px) {
-			display: block;
-		}
 	}
 
 	&__title {
@@ -97,15 +42,11 @@ const isFiltersSectionVisible = ref(window.innerWidth >= 768)
 			margin: 0;
 		}
 	}
+}
+</style>
 
-	&__list {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		flex-wrap: wrap;
-		gap: 8px 16px;
-	}
-
+<style scoped lang="scss">
+.filter {
 	&-item__input {
 		width: 250px;
 		transition-duration: 0.2s;
@@ -139,14 +80,6 @@ $active-border: solid 1px var(--blue-primary) !important;
 	font-size: 0.875rem;
 	line-height: 1.4;
 	color: var(--text-light-gray);
-}
-
-.courses-list {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	gap: 16px;
-	padding: 0 16px;
 }
 </style>
 

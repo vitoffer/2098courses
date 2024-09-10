@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { Course } from "@/types"
+import type { ICourse } from "@/types"
 
 interface Props {
-	course: Course
+	course: ICourse
 }
 
 const props = defineProps<Props>()
