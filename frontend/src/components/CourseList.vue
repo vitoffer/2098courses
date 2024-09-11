@@ -3,9 +3,7 @@ import CourseCard from "@/components/CourseCard.vue"
 import { useCourseListStore } from "@/stores/courseList"
 import { computed, onMounted, toRefs } from "vue"
 
-const { courseList } = toRefs(useCourseListStore())
-
-const filteredCourseList = computed(() => courseList.value.filter((x) => x))
+const { courseList, filteredCourseList } = toRefs(useCourseListStore())
 
 onMounted(async () => {
 	const fetchedCourseList = await getFetchedCourseList()

@@ -1,9 +1,12 @@
+import { getFilteredCourseList } from "@/modules/filters"
 import type { ICourse } from "@/types"
 import { defineStore } from 'pinia'
-import { reactive } from "vue"
+import { computed, reactive } from "vue"
 
 export const useCourseListStore = defineStore('courseList', () => {
 	const courseList = reactive<ICourse[]>([])
 
-	return {courseList}
+	const filteredCourseList = computed(() => getFilteredCourseList(courseList))
+
+	return {courseList, filteredCourseList}
 })
