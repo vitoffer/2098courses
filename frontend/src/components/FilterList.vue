@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { toRefs } from "vue"
+import MultiSelect from "primevue/multiselect"
+import Select from "primevue/select"
 import { checkMultiSelectItems } from "@/modules/functions"
 import { useFilterModelsStore } from "@/stores/filterModels"
 import { useFilterOptionsStore } from "@/stores/filterOptions"
-import { toRefs } from "vue"
 
 const {
 	selectedFocuses: filterFocusesModel,
