@@ -1,20 +1,8 @@
-# frontend
-
-This template should help get you started developing with Vue 3 in Vite.
-
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+# 2098courses frontend
 
 ## Project Setup Local
+
+### Install dependencies
 
 ```sh
 pnpm install
@@ -44,31 +32,38 @@ pnpm test:unit
 pnpm lint
 ```
 
-## Dev Project Run Docker
+## Dev Project Run In Docker
 
 ### [Install docker](https://docs.docker.com/engine/install/)
 
-## Build image
+### Build Dev Image And Run Container
 
 ```sh
 docker build . -f Dockerfile.dev -t 2098coursesdev
-
+docker run --rm -p 8080:8080 --name 2098coursesdev 2098coursesdev
 ```
 
-## Run container
+## JSON-Server for dev template data
 
-```sh
-docker run -p 8080:8080 --name 2098coursesdev 2098coursesdev
-```
-
-## Install json-server
+### Install JSON-server
 
 ```sh
 npm i -g json-server
 ```
 
-## Run json-server for template data
+### Run JSON-server
 
 ```sh
 json-server ./dev/mock-api/db.json
+```
+
+## Prod Project Run In Docker
+
+### [Install docker](#install-docker)
+
+### Build Prod Image And Run Container
+
+```sh
+docker build . -t 2098courses
+docker run --rm -p 8080:80 --name 2098courses 2098courses
 ```
