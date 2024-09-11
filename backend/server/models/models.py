@@ -9,3 +9,4 @@ class Course(SQLModel, table=True):
     time: str
     schedule: str
     for_ages: str
+    name: str

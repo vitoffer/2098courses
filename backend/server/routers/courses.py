@@ -1,9 +1,9 @@
 from typing import Annotated, List
-from sqlmodel import select
+
 from fastapi import APIRouter, Depends, Path
 from models.database import get_session
-from models.models import *
-from sqlmodel import Session
+from models.models import Course
+from sqlmodel import Session, select
 
 router = APIRouter(
     prefix='/courses',
