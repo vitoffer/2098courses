@@ -1,9 +1,8 @@
 @import './reset.css';
-@import './fonts.css';
 @import './variables.css';
 
 * {
-	font-family: 'Roboto';
+	font-family: 'Roboto', sans-serif;
 	color: var(--text-gray);
 }
 
