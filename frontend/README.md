@@ -14,7 +14,7 @@ TypeScript cannot handle type information for `.vue` imports by default, so we r
 
 See [Vite Configuration Reference](https://vitejs.dev/config/).
 
-## Project Setup
+## Project Setup Local
 
 ```sh
 pnpm install
@@ -42,4 +42,33 @@ pnpm test:unit
 
 ```sh
 pnpm lint
+```
+
+## Dev Project Run Docker
+
+### [Install docker](https://docs.docker.com/engine/install/)
+
+## Build image
+
+```sh
+docker build . -f Dockerfile.dev -t 2098coursesdev
+
+```
+
+## Run container
+
+```sh
+docker run -p 8080:8080 --name 2098coursesdev 2098coursesdev
+```
+
+## Install json-server
+
+```sh
+npm i -g json-server
+```
+
+## Run json-server for template data
+
+```sh
+json-server ./dev/mock-api/db.json
 ```
