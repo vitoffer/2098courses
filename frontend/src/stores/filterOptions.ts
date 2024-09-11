@@ -1,11 +1,21 @@
-import type { TFilterOptions } from "@/types"
+import type { TFilterOption } from "@/types"
 import { defineStore } from 'pinia'
-import { reactive } from "vue"
+import { reactive, type Reactive } from "vue"
 
-export const useFilterOptionsStore = defineStore('filterModels', () => {
-	const focusOptions = reactive<TFilterOptions[]>([])
-	const addressOptions = reactive<TFilterOptions[]>([])
-	const teacherOptions = reactive<TFilterOptions[]>([])
+export const useFilterOptionsStore = defineStore('filterOptions', () => {
+	const focusOptions = reactive<TFilterOption[]>([])
+	const addressOptions = reactive<TFilterOption[]>([])
+	const teacherOptions = reactive<TFilterOption[]>([])
+
+	fetchOptions(focusOptions, 'focus')
+	fetchOptions(addressOptions, 'address')
+	fetchOptions(teacherOptions, 'teacher')
+
+	async function fetchOptions(optionsArray: Reactive<TFilterOption[]>, type: 'focus' | 'address' | 'teacher') {
+		const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/${type}-filter-options`)
+		const data = await response.json()
+		optionsArray.push(...data)
+	}
 
 	return {focuses: focusOptions, addresses:addressOptions, teachers: teacherOptions}
 })

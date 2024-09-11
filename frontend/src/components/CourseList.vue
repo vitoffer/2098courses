@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import CourseCard from "@/components/CourseCard.vue"
 import { useCourseListStore } from "@/stores/courseList"
-import { computed, onMounted, toRefs } from "vue"
+import { onMounted, toRefs } from "vue"
 
 const { courseList, filteredCourseList } = toRefs(useCourseListStore())
 

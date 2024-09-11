@@ -20,7 +20,7 @@ const {
 	focuses: filterFocusesOptions,
 	addresses: filterAddressesOptions,
 	teachers: filterTeachersOptions,
-} = useFilterOptionsStore()
+} = toRefs(useFilterOptionsStore())
 
 const weekdaysOptions = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
 const priceOptions = ["Платно", "Бесплатно"]

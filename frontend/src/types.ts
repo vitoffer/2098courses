@@ -34,6 +34,6 @@ export type TFilterAge = number | null
 export type TFilterPrice = 'Платно' | 'Бесплатно' | null
 export type TFilterTime = string | null
 
-export type TFilterOptions = {
+export type TFilterOption = {
 	name: string
 } | string
