@@ -2,7 +2,7 @@
 import { useFilterModelsStore } from "@/stores/filterModels"
 import { toRefs } from "vue"
 
-const props = defineProps<{
+defineProps<{
 	isFiltersSectionVisible: boolean
 }>()
 
