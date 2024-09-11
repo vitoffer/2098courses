@@ -115,5 +115,10 @@ const priceOptions = ["Платно", "Бесплатно"]
 		flex-wrap: wrap;
 		gap: 8px 16px;
 	}
+
+	&-item__input {
+		width: 250px;
+		transition-duration: 0.2s;
+	}
 }
 </style>

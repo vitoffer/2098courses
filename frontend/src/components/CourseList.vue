@@ -1,10 +1,23 @@
 <script setup lang="ts">
 import CourseCard from "@/components/CourseCard.vue"
-import type { ICourse } from "@/types"
+import { useCourseListStore } from "@/stores/courseList"
+import { computed, onMounted, toRefs } from "vue"
 
-const props = defineProps<{
-	filteredCourseList: ICourse[]
-}>()
+const { courseList } = toRefs(useCourseListStore())
+
+const filteredCourseList = computed(() => courseList.value.filter((x) => x))
+
+onMounted(async () => {
+	const fetchedCourseList = await getFetchedCourseList()
+	courseList.value.push(...fetchedCourseList)
+})
+
+async function getFetchedCourseList() {
+	const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/courses`)
+	const data = await response.json()
+
+	return data
+}
 </script>
 
 <template>

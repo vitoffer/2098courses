@@ -13,7 +13,7 @@ function getFormattedSchedule() {
 	const schedule = props.course.schedule
 	const formattedScheduleArray: string[] = []
 
-	Object.entries(schedule).forEach(([weekday, timeArray]) => {
+	Object.entries(schedule ?? {}).forEach(([weekday, timeArray]) => {
 		formattedScheduleArray.push(`${weekday}: ${timeArray.join(", ")}`)
 	})
 
@@ -37,7 +37,7 @@ function getFormattedSchedule() {
 		</div>
 		<div class="card__group">
 			<i class="pi pi-star" />
-			<span class="card__age">{{ course.age.join(", ") }}</span>
+			<span class="card__age">{{ course.age?.join(", ") }}</span>
 		</div>
 		<div class="card__group">
 			<i class="pi pi-calendar" />
