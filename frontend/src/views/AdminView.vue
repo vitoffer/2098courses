@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import CourseList from "@/components/CourseList.vue"
+import CoursesSection from "@/components/main-view-sections/CoursesSection.vue"
+import SearchSection from "@/components/main-view-sections/SearchSection.vue"
 </script>
 
 <template>
-	<CourseList />
+	<SearchSection />
+	<CoursesSection />
 </template>
 
 <style scoped></style>

@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { useFilterModelsStore } from "@/stores/filterModels"
-import { toRefs } from "vue"
+import { onMounted, ref, toRefs } from "vue"
+import { useRoute } from "vue-router"
 
 defineProps<{
-	isFiltersSectionVisible: boolean
+	isFiltersSectionVisible?: boolean
 }>()
 
 defineEmits(["toggleFilterSectionVisibility"])
+
+const route = useRoute()
 
 const { searchText: searchTextModel } = toRefs(useFilterModelsStore())
 </script>
@@ -14,6 +17,7 @@ const { searchText: searchTextModel } = toRefs(useFilterModelsStore())
 <template>
 	<section class="search">
 		<button
+			v-if="!route.fullPath.includes('admin')"
 			class="filter__button"
 			@click="$emit('toggleFilterSectionVisibility')"
 		>
@@ -25,6 +29,12 @@ const { searchText: searchTextModel } = toRefs(useFilterModelsStore())
 			class="search-bar base-input"
 			v-model="searchTextModel"
 		/>
+		<button
+			v-if="route.fullPath.includes('admin')"
+			class="add-course__button"
+		>
+			<i class="pi pi-plus-circle"></i>
+		</button>
 	</section>
 </template>
 
@@ -39,7 +49,10 @@ const { searchText: searchTextModel } = toRefs(useFilterModelsStore())
 	&-bar {
 		display: block;
 		width: 600px;
-		margin: 0 auto;
+
+		&::placeholder {
+			color: var(--text-light-gray);
+		}
 
 		@media (max-width: 767px) {
 			width: 80vw;
@@ -53,13 +66,8 @@ const { searchText: searchTextModel } = toRefs(useFilterModelsStore())
 	}
 }
 
-.search-bar::placeholder {
-	color: var(--text-light-gray);
-}
-
 .filter__button {
 	display: none;
-
 	padding: 8px;
 	line-height: 0;
 	background-color: var(--blue-primary);
@@ -72,6 +80,18 @@ const { searchText: searchTextModel } = toRefs(useFilterModelsStore())
 
 	@media (max-width: 767px) {
 		display: block;
+	}
+}
+
+.add-course__button {
+	padding: 4px;
+	line-height: 1;
+	background-color: var(--green-primary);
+	border-radius: 5px;
+
+	.pi {
+		font-size: 1.5rem;
+		color: var(--text-white);
 	}
 }
 </style>
