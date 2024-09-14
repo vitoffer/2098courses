@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import { useEditCourseDialogStore } from "@/stores/editCourseDialog"
 import { useFilterModelsStore } from "@/stores/filterModels"
-import { onMounted, ref, toRefs } from "vue"
+import { toRefs } from "vue"
 import { useRoute } from "vue-router"
 
 defineProps<{
@@ -12,6 +13,8 @@ defineEmits(["toggleFilterSectionVisibility"])
 const route = useRoute()
 
 const { searchText: searchTextModel } = toRefs(useFilterModelsStore())
+
+const { isEditCourseDialogVisible } = toRefs(useEditCourseDialogStore())
 </script>
 
 <template>
@@ -32,6 +35,7 @@ const { searchText: searchTextModel } = toRefs(useFilterModelsStore())
 		<button
 			v-if="route.fullPath.includes('admin')"
 			class="add-course__button"
+			@click="isEditCourseDialogVisible = true"
 		>
 			<i class="pi pi-plus-circle"></i>
 		</button>

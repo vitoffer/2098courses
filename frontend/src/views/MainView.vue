@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue"
-import SearchSection from "@/components/main-view-sections/SearchSection.vue"
-import FiltersSection from "@/components/main-view-sections/FiltersSection.vue"
-import CoursesSection from "@/components/main-view-sections/CoursesSection.vue"
+import SearchSection from "@/components/sections/SearchSection.vue"
+import FiltersSection from "@/components/sections/FiltersSection.vue"
+import CoursesSection from "@/components/sections/CoursesSection.vue"
 
 const isFiltersSectionVisible = ref(window.innerWidth >= 768)
 </script>
@@ -15,7 +15,6 @@ const isFiltersSectionVisible = ref(window.innerWidth >= 768)
 				isFiltersSectionVisible = !isFiltersSectionVisible
 			"
 		/>
-
 		<FiltersSection :is-filters-section-visible="isFiltersSectionVisible" />
 		<CoursesSection />
 	</main>

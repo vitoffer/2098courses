@@ -8,7 +8,7 @@ interface Props {
 
 const props = defineProps<Props>()
 
-defineEmits(["confirmDeletion"])
+defineEmits(["confirmDeletion", "showEditCourseDialog"])
 
 const route = useRoute()
 
@@ -82,7 +82,10 @@ function getFormattedSchedule() {
 			v-else
 			class="card__group card__group--admin-buttons"
 		>
-			<button class="button button--edit">
+			<button
+				class="button button--edit"
+				@click="$emit('showEditCourseDialog', course.id)"
+			>
 				<i class="pi pi-pencil"></i>
 			</button>
 			<button

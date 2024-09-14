@@ -1,11 +1,21 @@
 <script setup lang="ts">
-import CoursesSection from "@/components/main-view-sections/CoursesSection.vue"
-import SearchSection from "@/components/main-view-sections/SearchSection.vue"
+import CoursesSection from "@/components/sections/CoursesSection.vue"
+import SearchSection from "@/components/sections/SearchSection.vue"
 </script>
 
 <template>
-	<SearchSection />
-	<CoursesSection />
+	<main
+		class="container"
+		id="adminView"
+	>
+		<SearchSection />
+		<CoursesSection />
+	</main>
 </template>
 
-<style scoped></style>
+<style scoped>
+.container {
+	max-width: 1440px;
+	margin: 0 auto;
+}
+</style>

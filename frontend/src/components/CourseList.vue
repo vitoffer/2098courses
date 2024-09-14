@@ -1,13 +1,21 @@
 <script setup lang="ts">
+import { onMounted, ref, toRefs, type Ref } from "vue"
+import { useConfirm } from "primevue/useconfirm"
+import ConfirmDialog from "primevue/confirmdialog"
 import CourseCard from "@/components/CourseCard.vue"
 import { useCourseListStore } from "@/stores/courseList"
-import ConfirmDialog from "primevue/confirmdialog"
-import { useConfirm } from "primevue/useconfirm"
-import { onMounted, toRefs } from "vue"
+import Dialog from "primevue/dialog"
+import { useEditCourse } from "@/composables/editCourse"
+import { useEditCourseDialogStore } from "@/stores/editCourseDialog"
 
 const { courseList, filteredCourseList } = toRefs(useCourseListStore())
 
 const confirm = useConfirm()
+
+const selectedCourseId: Ref<string | null> = ref(null)
+
+const { editingCourse } = useEditCourse(selectedCourseId)
+const { isEditCourseDialogVisible } = toRefs(useEditCourseDialogStore())
 
 onMounted(async () => {
 	const fetchedCourseList = await getFetchedCourseList()
@@ -19,6 +27,12 @@ async function getFetchedCourseList() {
 	const data = await response.json()
 
 	return data
+}
+
+function showEditCourseDialog(selectedId: string) {
+	selectedCourseId.value = selectedId
+
+	isEditCourseDialogVisible.value = true
 }
 
 function confirmDeletion(courseId: string) {
@@ -46,6 +60,18 @@ function confirmDeletion(courseId: string) {
 <template>
 	<ul class="courses-list">
 		<ConfirmDialog />
+		<Dialog
+			append-to="#adminView"
+			v-model:visible="isEditCourseDialogVisible"
+			modal
+			:header="selectedCourseId ? 'Редактирование кружка' : 'Добавление кружка'"
+			@after-hide="selectedCourseId = null"
+		>
+			<input
+				type="text"
+				v-model="editingCourse.name"
+			/>
+		</Dialog>
 		<li
 			v-for="course in filteredCourseList"
 			:key="course.id"
@@ -53,6 +79,7 @@ function confirmDeletion(courseId: string) {
 			<CourseCard
 				:course="course"
 				@confirm-deletion="confirmDeletion"
+				@show-edit-course-dialog="showEditCourseDialog"
 			/>
 		</li>
 	</ul>
