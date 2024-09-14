@@ -1,5 +1,14 @@
 import { useFilterModelsStore } from "@/stores/filterModels"
-import type { ICourse, IFilterAddress, IFilterFocus, IFilterTeacher, TFilterAge, TFilterPrice, TFilterTime, TWeekday } from "@/types"
+import type {
+	ICourse,
+	IFilterAddress,
+	IFilterFocus,
+	IFilterTeacher,
+	TFilterAge,
+	TFilterPrice,
+	TFilterTime,
+	TWeekday,
+} from "@/types"
 import { toRefs } from "vue"
 
 export function getFilteredCourseList(courseList: ICourse[]) {
@@ -14,17 +23,16 @@ export function getFilteredCourseList(courseList: ICourse[]) {
 		selectedTime,
 	} = toRefs(useFilterModelsStore())
 
-	return courseList.filter((course) =>
-		isCourseFitSearchText(course, searchText.value) &&
-		isCourseFitFocus(course, selectedFocuses.value) &&
-		isCourseFitAddress(course, selectedAddresses.value) &&
-		isCourseFitTeacher(course, selectedTeachers.value) &&
-		isCourseFitAge(course, selectedAge.value) &&
-		isCourseFitPrice(course, selectedPrice.value) &&
-		isCourseFitDateTime(course , selectedWeekdays.value, selectedTime.value)
+	return courseList.filter(
+		(course) =>
+			isCourseFitSearchText(course, searchText.value) &&
+			isCourseFitFocus(course, selectedFocuses.value) &&
+			isCourseFitAddress(course, selectedAddresses.value) &&
+			isCourseFitTeacher(course, selectedTeachers.value) &&
+			isCourseFitAge(course, selectedAge.value) &&
+			isCourseFitPrice(course, selectedPrice.value) &&
+			isCourseFitDateTime(course, selectedWeekdays.value, selectedTime.value),
 	)
-
-
 }
 
 function isCourseFitSearchText(course: ICourse, searchText: string) {
@@ -66,7 +74,11 @@ function isCourseFitPrice(course: ICourse, price: TFilterPrice) {
 	return course.price === price
 }
 
-function isCourseFitDateTime(course: ICourse, weekdays: TWeekday[], time: TFilterTime) {
+function isCourseFitDateTime(
+	course: ICourse,
+	weekdays: TWeekday[],
+	time: TFilterTime,
+) {
 	if (weekdays.length === 0 && !time) {
 		return true
 	}
@@ -79,13 +91,16 @@ function isCourseFitDateTime(course: ICourse, weekdays: TWeekday[], time: TFilte
 	return isCourseFitTime(course, time) && isCourseFitWeekday(course, weekdays)
 }
 
-function isCourseFitTime(course: ICourse, time: string) {
+export function isCourseFitTime(course: ICourse, time: string) {
 	return Object.values(course.schedule).some((fullTimeStringArray) => {
-		return fullTimeStringArray.some((fullTimeString) => fullTimeString.includes(time))
+		return fullTimeStringArray.some((fullTimeString) =>
+			fullTimeString.includes(time),
+		)
 	})
 }
 
-function isCourseFitWeekday(course: ICourse, weekdays: TWeekday[]) {
+export function isCourseFitWeekday(course: ICourse, weekdays: TWeekday[]) {
 	return Object.keys(course.schedule).some((courseWeekday) =>
-		weekdays.some((selectedWeekday) => courseWeekday === selectedWeekday))
+		weekdays.some((selectedWeekday) => courseWeekday === selectedWeekday),
+	)
 }

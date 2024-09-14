@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import type { ICourse } from "@/types"
 import { useRoute } from "vue-router"
+import type { ICourse } from "@/types"
 
 interface Props {
 	course: ICourse
 }
 
 const props = defineProps<Props>()
+
+defineEmits(["confirmDeletion"])
 
 const route = useRoute()
 
@@ -83,7 +85,12 @@ function getFormattedSchedule() {
 			<button class="button button--edit">
 				<i class="pi pi-pencil"></i>
 			</button>
-			<button class="button button--delete"><i class="pi pi-times"></i></button>
+			<button
+				class="button button--delete"
+				@click="$emit('confirmDeletion', course.id)"
+			>
+				<i class="pi pi-times"></i>
+			</button>
 		</div>
 	</article>
 </template>
