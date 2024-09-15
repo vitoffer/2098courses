@@ -1,6 +1,6 @@
 # Файл запуска API
 
-from conf.parser import called
+# from conf.parser import called
 from conf.settings import ORIGINS
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -30,5 +30,5 @@ def on_startup():
     create_db_and_tables()
 
 
-if __name__ == '__main__':
-    called(app)
+# if __name__ == '__main__':
+#     called(app)
