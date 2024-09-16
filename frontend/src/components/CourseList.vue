@@ -8,15 +8,22 @@ import Dialog from "primevue/dialog"
 import { useEditCourse } from "@/composables/editCourse"
 import { useEditCourseDialogStore } from "@/stores/editCourseDialog"
 import CourseEditDialog from "./CourseEditDialog.vue"
+import CoursePreviewDialog from "./CoursePreviewDialog.vue"
+import { useRoute } from "vue-router"
 
 const { courseList, filteredCourseList } = toRefs(useCourseListStore())
 
 const confirm = useConfirm()
 
+const route = useRoute()
+
 const selectedCourseId: Ref<string | null> = ref(null)
 
 const { editingCourse } = useEditCourse(selectedCourseId)
 const { isEditCourseDialogVisible } = toRefs(useEditCourseDialogStore())
+
+const isCoursePreviewDialogVisible = ref(false)
+const coursePreviewId = ref<null | string>(null)
 
 onMounted(async () => {
 	const fetchedCourseList = await getFetchedCourseList()
@@ -56,12 +63,18 @@ function confirmDeletion(courseId: string) {
 		},
 	})
 }
+
+function showCoursePreview(courseId: string) {
+	isCoursePreviewDialogVisible.value = true
+	coursePreviewId.value = courseId
+}
 </script>
 
 <template>
 	<ul class="courses-list">
 		<ConfirmDialog />
 		<Dialog
+			v-if="route.fullPath.includes('admin')"
 			append-to="#adminView"
 			v-model:visible="isEditCourseDialogVisible"
 			modal
@@ -69,6 +82,15 @@ function confirmDeletion(courseId: string) {
 			@after-hide="selectedCourseId = null"
 		>
 			<CourseEditDialog v-model="editingCourse" />
+		</Dialog>
+		<Dialog
+			v-model:visible="isCoursePreviewDialogVisible"
+			modal
+			:header="courseList.find((course) => course.id === coursePreviewId)?.name"
+		>
+			<CoursePreviewDialog
+				:course="courseList.find((course) => course.id === coursePreviewId)"
+			/>
 		</Dialog>
 		<li
 			v-for="course in filteredCourseList"
@@ -78,6 +100,7 @@ function confirmDeletion(courseId: string) {
 				:course="course"
 				@confirm-deletion="confirmDeletion"
 				@show-edit-course-dialog="showEditCourseDialog"
+				@show-course-preview="showCoursePreview"
 			/>
 		</li>
 	</ul>
@@ -120,7 +143,16 @@ function confirmDeletion(courseId: string) {
 
 .p-dialog {
 	width: 80vw !important;
-	height: 70vh !important;
+
+	@media (max-width: 767px) {
+		width: 100% !important;
+		margin: 0 32px !important;
+	}
+
+	@media (max-width: 480px) {
+		width: 100% !important;
+		margin: 0 12px !important;
+	}
 
 	&-content {
 		display: flex;

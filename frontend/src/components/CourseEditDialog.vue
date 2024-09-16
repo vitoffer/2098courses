@@ -77,15 +77,6 @@ const scheduleModel = ref("")
 </template>
 
 <style scoped lang="scss">
-.dialog {
-	display: flex;
-	flex-direction: column;
-	gap: 12px;
-	padding: 16px 16px 32px;
-	width: 80vw;
-	max-width: 900px;
-}
-
 :deep(.p-inputtext) {
 	width: 100% !important;
 }
@@ -94,5 +85,14 @@ const scheduleModel = ref("")
 <style lang="scss">
 .p-dialog-content {
 	padding: 0 !important;
+}
+
+.dialog {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 16px 16px 32px;
+	width: 80vw;
+	max-width: 900px;
 }
 </style>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router"
 import type { ICourse } from "@/types"
+import { getFormattedSchedule } from "@/modules/functions"
 
 interface Props {
 	course: ICourse
@@ -8,22 +9,11 @@ interface Props {
 
 const props = defineProps<Props>()
 
-defineEmits(["confirmDeletion", "showEditCourseDialog"])
+defineEmits(["confirmDeletion", "showEditCourseDialog", "showCoursePreview"])
 
 const route = useRoute()
 
-const formattedSchedule = getFormattedSchedule()
-
-function getFormattedSchedule() {
-	const schedule = props.course.schedule
-	const formattedScheduleArray: string[] = []
-
-	Object.entries(schedule ?? {}).forEach(([weekday, timeArray]) => {
-		formattedScheduleArray.push(`${weekday}: ${timeArray.join(", ")}`)
-	})
-
-	return formattedScheduleArray.join(", ")
-}
+const formattedSchedule = getFormattedSchedule(props.course.schedule)
 </script>
 
 <template>
@@ -64,12 +54,12 @@ function getFormattedSchedule() {
 			v-if="!route.fullPath.includes('admin')"
 			class="card__group card__group--user-buttons"
 		>
-			<a
-				:href="`courses/${course.id}`"
+			<button
 				class="button--course-detail button"
+				@click="$emit('showCoursePreview', course.id)"
 			>
 				Подробнее
-			</a>
+			</button>
 			<a
 				:href="course.link"
 				target="_blank"
