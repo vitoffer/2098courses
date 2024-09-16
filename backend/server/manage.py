@@ -1,7 +1,8 @@
 import argparse
 import uvicorn
 
-from .settings import HOST, PORT
+from conf.settings import HOST, PORT, DEBUG
+
 
 parser = argparse.ArgumentParser(
     prog='API server',
@@ -13,18 +14,15 @@ parser.add_argument('-r', '--runserver', action='store_true')
 parser.add_argument('-t', '--testserver', action='store_true')
 
 
-# Запуск сервера
-def run(app):
-    uvicorn.run(app, host=HOST, port=PORT)
+def run():
+    uvicorn.run('conf.server:app', host=HOST, port=PORT, reload=DEBUG)
 
 
-# Запуск тестирования API
-def test():
-    pass
-
-
-# Парсинг скрипта
-def called(app):
+# Запуск скрипта
+if __name__ == '__main__':
     args = parser.parse_args()
     if args.runserver:
-        run(app)
+        run()
+    else:
+        ...
+        # Сдесь будет код запуска тестов

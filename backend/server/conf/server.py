@@ -1,7 +1,7 @@
 # Файл запуска API
 
 # from conf.parser import called
-from conf.settings import ORIGINS
+from .settings import ORIGINS
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from models.database import create_db_and_tables, get_session
@@ -28,7 +28,3 @@ app.include_router(routers.router)
 @app.on_event('startup')
 def on_startup():
     create_db_and_tables()
-
-
-# if __name__ == '__main__':
-#     called(app)

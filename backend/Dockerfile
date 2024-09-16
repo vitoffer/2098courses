@@ -9,6 +9,4 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
 COPY ./server /code/server
 
-WORKDIR /code/server
-
-CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000"cd  ]
+CMD ["python", "server/manage.py", "-r"]

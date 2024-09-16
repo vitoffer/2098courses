@@ -5,9 +5,9 @@ from pathlib import Path
 load_dotenv()
 
 DEBUG = os.getenv('DEBUG') in ['True', 'true', 't', '1']
-ORIGINS = os.getenv('ORGINS').split(',')
+ORIGINS = str(os.getenv('ORIGINS')).split(',')
 HOST = os.getenv('HOST')
-PORT = int(os.getenv('POST'))
+PORT = int(os.getenv('PORT'))
 DB_URL = os.getenv('DATABASE')
 
 BASE_DIR = Path(__file__).resolve().parent.parent

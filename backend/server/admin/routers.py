@@ -3,10 +3,10 @@ from shutil import copyfileobj
 
 # import openpyxl as xl
 from docx.api import Document
-from sqlmodel import Session
+from sqlmodel import Session, select
 from models.models import Course
 from models.database import get_session
-from .models import DeleteTables, UploadTabelToDb
+from .models import DeleteTables, UploadTabelToDb, CourseType
 from conf.settings import BASE_DIR
 from fastapi import APIRouter, Path, UploadFile, Depends
 import bs4
@@ -93,3 +93,29 @@ async def add_to_base(
                     session.add(Course(**data))
         session.commit()
         return {'Result': 'Success'}
+
+
+@router.post('/add_course')
+async def add_course(
+    course: CourseType, session: Session = Depends(get_session)
+):
+    session.add(Course(**course.model_dump()))
+    session.commit()
+    return {'Result': 'Success'}
+
+
+@router.patch('/change_course/{id}')
+async def change_course(
+    id: int, course: CourseType, session: Session = Depends(get_session)
+):
+    course_model = session.exec(select(Course).where(Course.id == id)).one()
+    session.add(course_model.sqlmodel_update(course.model_dump()))
+    session.commit()
+    return {'Result': 'Success'}
+
+
+@router.delete('/delete_course/{id}')
+async def delete_course(id: int, session: Session = Depends(get_session)):
+    session.delete(session.exec(select(Course).where(Course.id == id)).one())
+    session.commit()
+    return {'Result': 'Success'}
