@@ -1,11 +1,16 @@
 <script setup lang="ts">
-import type { Course } from "@/types"
+import { useRoute } from "vue-router"
+import type { ICourse } from "@/types"
 
 interface Props {
-	course: Course
+	course: ICourse
 }
 
 const props = defineProps<Props>()
+
+defineEmits(["confirmDeletion", "showEditCourseDialog"])
+
+const route = useRoute()
 
 const formattedSchedule = getFormattedSchedule()
 
@@ -13,7 +18,7 @@ function getFormattedSchedule() {
 	const schedule = props.course.schedule
 	const formattedScheduleArray: string[] = []
 
-	Object.entries(schedule).forEach(([weekday, timeArray]) => {
+	Object.entries(schedule ?? {}).forEach(([weekday, timeArray]) => {
 		formattedScheduleArray.push(`${weekday}: ${timeArray.join(", ")}`)
 	})
 
@@ -37,36 +42,65 @@ function getFormattedSchedule() {
 		</div>
 		<div class="card__group">
 			<i class="pi pi-star" />
-			<span class="card__age">{{ course.age.join(", ") }}</span>
+			<span class="card__age">{{ course.age?.join(", ") }}</span>
 		</div>
 		<div class="card__group">
 			<i class="pi pi-calendar" />
 			<span class="card__schedule">{{ formattedSchedule }}</span>
 		</div>
-		<div class="card__group">
+		<div class="card__group card__group--price">
 			<i class="pi pi-tag" />
 			<span class="card__price">{{ course.price }}</span>
 		</div>
-		<div class="card__group-buttons">
+		<a
+			v-if="route.fullPath.includes('admin')"
+			:href="course.link"
+			class="card__group card__group--link"
+		>
+			<i class="pi pi-at" />
+			<span class="card__link">{{ course.link.slice(8) }}</span>
+		</a>
+		<div
+			v-if="!route.fullPath.includes('admin')"
+			class="card__group card__group--user-buttons"
+		>
 			<a
 				:href="`courses/${course.id}`"
-				class="button-course-detail button"
+				class="button--course-detail button"
 			>
 				Подробнее
 			</a>
 			<a
 				:href="course.link"
 				target="_blank"
-				class="button-course-signup button"
+				class="button--course-signup button"
 			>
-				Подробнее
+				Записаться
 			</a>
+		</div>
+		<div
+			v-else
+			class="card__group card__group--admin-buttons"
+		>
+			<button
+				class="button button--edit"
+				@click="$emit('showEditCourseDialog', course.id)"
+			>
+				<i class="pi pi-pencil"></i>
+			</button>
+			<button
+				class="button button--delete"
+				@click="$emit('confirmDeletion', course.id)"
+			>
+				<i class="pi pi-times"></i>
+			</button>
 		</div>
 	</article>
 </template>
 
 <style scoped lang="scss">
 .course-card {
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	gap: 4px;
@@ -74,6 +108,10 @@ function getFormattedSchedule() {
 	padding: 8px 12px 12px;
 	border-radius: 10px;
 	box-shadow: 0 0 8px 0 rgba(0 0 0 / 0.2);
+
+	@media (max-width: 380px) {
+		max-width: 270px;
+	}
 
 	p,
 	span {
@@ -124,7 +162,27 @@ function getFormattedSchedule() {
 				color: var(--text-black);
 			}
 
-			&-buttons {
+			&--link {
+				*,
+				.pi::before {
+					color: var(--link-color);
+				}
+
+				.pi {
+					margin-top: 2px;
+				}
+
+				.card__link {
+					text-decoration: underline;
+				}
+			}
+
+			&--price,
+			&--link {
+				margin-right: 96px;
+			}
+
+			&--user-buttons {
 				display: flex;
 				align-items: center;
 				justify-content: center;
@@ -138,12 +196,50 @@ function getFormattedSchedule() {
 					color: var(--text-white);
 					border-radius: 10px;
 
-					&-course-detail {
+					&--course-detail {
 						background-color: var(--blue-primary);
 					}
 
-					&-course-signup {
+					&--course-signup {
 						background-color: var(--green-primary);
+					}
+				}
+			}
+
+			&--admin-buttons {
+				position: absolute;
+				bottom: 12px;
+				right: 16px;
+				display: flex;
+				gap: 12px;
+
+				.button {
+					padding: 6px;
+					line-height: 1;
+					border-radius: 5px;
+
+					.pi {
+						font-size: 1.25rem;
+
+						&::before {
+							color: var(--text-white);
+						}
+					}
+
+					&--delete {
+						background-color: var(--red-primary);
+
+						&:hover {
+							background-color: var(--red-secondary);
+						}
+					}
+
+					&--edit {
+						background-color: var(--blue-primary);
+
+						&:hover {
+							background-color: var(--blue-secondary);
+						}
 					}
 				}
 			}

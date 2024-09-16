@@ -1,0 +1,15 @@
+FROM node:alpine
+
+WORKDIR /app
+
+RUN npm i -g pnpm
+
+COPY pnpm-lock.yaml package.json ./
+
+RUN pnpm install
+
+COPY . .
+
+EXPOSE 8080
+
+CMD ["pnpm", "run", "dev:docker"]

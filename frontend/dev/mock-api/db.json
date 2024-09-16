@@ -39,14 +39,36 @@
 			],
 			"schedule": {
 				"Пн": [
-					"17:30-18:30"
+					"17:30-18:30",
+					"18:30-19:30"
 				]
 			},
 			"price": "Бесплатно",
 			"link": "https://mos.ru"
 		},
 		{
-			"id": "1",
+			"id": "2",
+			"name": "Название",
+			"focus": "Направленность",
+			"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam at tincidunt sapien. Quisque eget ante orci. Proin malesuada ex risus, quis faucibus ante rhoncus at. Pellentesque habitant morbi tristique",
+			"address": "Ангарская 22А",
+			"teacher": "Гоптарь Евгений Андреевич",
+			"age": [
+				14
+			],
+			"schedule": {
+				"Пн": [
+					"17:30-18:30"
+				],
+				"Вт": [
+					"18:30-19:30"
+				]
+			},
+			"price": "Бесплатно",
+			"link": "https://mos.ru"
+		},
+		{
+			"id": "3",
 			"name": "Название",
 			"focus": "Направленность",
 			"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam at tincidunt sapien. Quisque eget ante orci. Proin malesuada ex risus, quis faucibus ante rhoncus at. Pellentesque habitant morbi tristique",
@@ -64,25 +86,7 @@
 			"link": "https://mos.ru"
 		},
 		{
-			"id": "1",
-			"name": "Название",
-			"focus": "Направленность",
-			"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam at tincidunt sapien. Quisque eget ante orci. Proin malesuada ex risus, quis faucibus ante rhoncus at. Pellentesque habitant morbi tristique",
-			"address": "Ангарская 22А",
-			"teacher": "Гоптарь Евгений Андреевич",
-			"age": [
-				14
-			],
-			"schedule": {
-				"Пн": [
-					"17:30-18:30"
-				]
-			},
-			"price": "Бесплатно",
-			"link": "https://mos.ru"
-		},
-		{
-			"id": "1",
+			"id": "4",
 			"name": "Название",
 			"focus": "Направленность",
 			"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam at tincidunt sapien. Quisque eget ante orci. Proin malesuada ex risus, quis faucibus ante rhoncus at. Pellentesque habitant morbi tristique",

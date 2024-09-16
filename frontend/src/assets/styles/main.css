@@ -1,9 +1,9 @@
 @import './reset.css';
-@import './fonts.css';
 @import './variables.css';
+@import './primevueadditions.scss';
 
 * {
-	font-family: 'Roboto';
+	font-family: 'Roboto', sans-serif;
 	color: var(--text-gray);
 }
 
