@@ -23,6 +23,7 @@ const formattedSchedule = computed(() =>
 		<p>{{ course?.price }}</p>
 		<a
 			:href="course?.link"
+			target="_blank"
 			class="button--course-signup button"
 		>
 			Записаться
