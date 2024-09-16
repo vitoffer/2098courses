@@ -7,6 +7,7 @@ import { useCourseListStore } from "@/stores/courseList"
 import Dialog from "primevue/dialog"
 import { useEditCourse } from "@/composables/editCourse"
 import { useEditCourseDialogStore } from "@/stores/editCourseDialog"
+import CourseEditDialog from "./CourseEditDialog.vue"
 
 const { courseList, filteredCourseList } = toRefs(useCourseListStore())
 
@@ -67,10 +68,7 @@ function confirmDeletion(courseId: string) {
 			:header="selectedCourseId ? 'Редактирование кружка' : 'Добавление кружка'"
 			@after-hide="selectedCourseId = null"
 		>
-			<input
-				type="text"
-				v-model="editingCourse.name"
-			/>
+			<CourseEditDialog v-model="editingCourse" />
 		</Dialog>
 		<li
 			v-for="course in filteredCourseList"
@@ -117,6 +115,22 @@ function confirmDeletion(courseId: string) {
 		.p-button-label {
 			color: var(--text-white) !important;
 		}
+	}
+}
+
+.p-dialog {
+	width: 80vw !important;
+	height: 70vh !important;
+
+	&-content {
+		display: flex;
+		justify-content: center;
+	}
+
+	&-title {
+		flex-grow: 1 !important;
+		text-align: center !important;
+		margin-left: 40px;
 	}
 }
 </style>

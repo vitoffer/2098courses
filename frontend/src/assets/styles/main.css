@@ -1,5 +1,6 @@
 @import './reset.css';
 @import './variables.css';
+@import './primevueadditions.scss';
 
 * {
 	font-family: 'Roboto', sans-serif;

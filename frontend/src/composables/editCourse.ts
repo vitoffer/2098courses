@@ -14,9 +14,11 @@ export function useEditCourse(selectedCourseId: Ref<string | null>) {
 
 	const editingCourse: ComputedRef<ICourse> = computed(() => {
 		return toValue(selectedCourseId)
-			? (courseList.value.find(
-					(course) => course.id === toValue(selectedCourseId),
-				) as ICourse)
+			? reactive({
+					...(courseList.value.find(
+						(course) => course.id === toValue(selectedCourseId),
+					) as ICourse),
+				})
 			: reactive({
 					id: "new",
 					name: "",
