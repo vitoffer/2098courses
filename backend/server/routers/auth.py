@@ -16,6 +16,7 @@ from conf.settings import (
     EXPIRE_DELTA,
     PWD_CONTEXT,
 )
+from conf.depencies import get_password_hash
 
 router = APIRouter(
     prefix='/auth',
@@ -24,10 +25,6 @@ router = APIRouter(
 
 def verify_password(plain_password, hash_password) -> bool:
     return PWD_CONTEXT.verify(plain_password, hash_password)
-
-
-def get_password_hash(password):
-    return PWD_CONTEXT.hash(password)
 
 
 def get_user(session: Session, username: str):

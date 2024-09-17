@@ -2,6 +2,7 @@ import argparse
 import uvicorn
 
 from conf.settings import HOST, PORT, DEBUG
+from conf.depencies import cerate_su
 
 
 parser = argparse.ArgumentParser(
@@ -12,6 +13,7 @@ parser = argparse.ArgumentParser(
 
 parser.add_argument('-r', '--runserver', action='store_true')
 parser.add_argument('-t', '--testserver', action='store_true')
+parser.add_argument('-su', '--create_superuser', action='store_true')
 
 
 def run():
@@ -23,6 +25,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     if args.runserver:
         run()
-    else:
+    # Создание супер-пользователя(админа)
+    elif args.create_superuser:
+        cerate_su()
         ...
         # Сдесь будет код запуска тестов
