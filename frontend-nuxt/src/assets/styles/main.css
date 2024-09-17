@@ -1,0 +1,25 @@
+@import './reset.css';
+@import './variables.css';
+@import './primevueadditions.scss';
+
+* {
+	font-family: 'Roboto', sans-serif;
+	color: var(--text-gray);
+}
+
+a, a:link, a:visited {
+	color: var(--link-color);
+}
+
+.base-input {
+	padding: 4px 16px !important;
+	font-size: 0.875rem !important;
+	line-height: 1.4 !important;
+	background-color: var(--background-white);
+	border: solid 1px var(--border-light-gray) !important;
+	border-radius: 5px !important;
+}
+
+.base-input:focus {
+	border: solid 1px var(--blue-primary) !important;
+}
