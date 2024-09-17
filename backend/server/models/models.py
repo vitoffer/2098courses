@@ -1,3 +1,4 @@
+from typing import Any, Dict, Tuple
 from sqlmodel import Field, SQLModel
 
 
@@ -20,3 +21,11 @@ class Teacher(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     name: str
     subject: str
+
+
+class User(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    username: str = Field(index=True)
+    disabled: bool
+    password: str
+    is_super_user: bool

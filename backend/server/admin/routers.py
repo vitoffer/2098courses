@@ -1,5 +1,6 @@
 import os
 from shutil import copyfileobj
+from typing import Annotated
 
 # import openpyxl as xl
 from docx.api import Document
@@ -8,7 +9,9 @@ from models.models import Course
 from models.database import get_session
 from .models import DeleteTables, UploadTabelToDb, CourseType
 from conf.settings import BASE_DIR
-from fastapi import APIRouter, Path, UploadFile, Depends
+from fastapi import APIRouter, UploadFile, Depends, HTTPException, status
+from routers.auth import get_current_active_user, User
+
 import bs4
 import requests
 
@@ -29,6 +32,16 @@ KEYS = [
 ]
 
 router = APIRouter(prefix='/admin', tags=['admin'])
+
+
+def is_super_user(user: User):
+    if not user.is_super_user:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail='Access denied',
+            headers={'WWW-Authenticate': 'Bearer'},
+        )
+    return True
 
 
 # Парсер для получения списка учителей
@@ -54,7 +67,11 @@ router = APIRouter(prefix='/admin', tags=['admin'])
 
 
 @router.post('/upload_table')
-async def upload_table(table: UploadFile):
+async def upload_table(
+    table: UploadFile,
+    current_user: Annotated[User, Depends(get_current_active_user)],
+):
+    is_super_user(current_user)
     with open(f'{TABLES_DIR}/{table.filename}', 'wb') as buffer:
         copyfileobj(table.file, buffer)
 
@@ -64,20 +81,29 @@ async def upload_table(table: UploadFile):
 @router.post('/delete_table')
 async def delete_table(
     table_names: DeleteTables,
+    current_user: Annotated[User, Depends(get_current_active_user)],
 ):
+    is_super_user(current_user)
     map(lambda x: os.remove(f'{TABLES_DIR}/{x}'), table_names.tables_names)
     return {'Detail': 'Success'}
 
 
 @router.get('/get_tables')
-async def get_tables_names():
+async def get_tables_names(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    session: Session = Depends(get_session),
+):
+    is_super_user(current_user)
     return {'tables': list(map(lambda x: x, os.listdir(TABLES_DIR)))}
 
 
 @router.post('/add_data_to_base')
 async def add_to_base(
-    tables: UploadTabelToDb, session: Session = Depends(get_session)
+    tables: UploadTabelToDb,
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    session: Session = Depends(get_session),
 ):
+    is_super_user(current_user)
     for name in tables.tables_names:
         document = Document(f'{TABLES_DIR}/{name}')
         tables = document.tables
@@ -97,8 +123,11 @@ async def add_to_base(
 
 @router.post('/add_course')
 async def add_course(
-    course: CourseType, session: Session = Depends(get_session)
+    course: CourseType,
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    session: Session = Depends(get_session),
 ):
+    is_super_user(current_user)
     session.add(Course(**course.model_dump()))
     session.commit()
     return {'Result': 'Success'}
@@ -106,8 +135,12 @@ async def add_course(
 
 @router.patch('/change_course/{id}')
 async def change_course(
-    id: int, course: CourseType, session: Session = Depends(get_session)
+    id: int,
+    course: CourseType,
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    session: Session = Depends(get_session),
 ):
+    is_super_user(current_user)
     course_model = session.exec(select(Course).where(Course.id == id)).one()
     session.add(course_model.sqlmodel_update(course.model_dump()))
     session.commit()
@@ -115,7 +148,12 @@ async def change_course(
 
 
 @router.delete('/delete_course/{id}')
-async def delete_course(id: int, session: Session = Depends(get_session)):
+async def delete_course(
+    id: int,
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    session: Session = Depends(get_session),
+):
+    is_super_user(current_user)
     session.delete(session.exec(select(Course).where(Course.id == id)).one())
     session.commit()
     return {'Result': 'Success'}
