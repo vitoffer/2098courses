@@ -1,13 +1,20 @@
 export interface ICourse {
 	id: string
-	name: string
-	focus: string
-	description: string
+	isPaid: boolean
 	address: string
 	teacher: string
-	age: number[]
-	schedule: ISchedule
-	price: string
+	forAges: string
+	// forAges: number[]
+	name: string
+	monday: string
+	tuesday: string
+	wednesday: string
+	thursday: string
+	friday: string
+	saturday: string
+	// schedule: ISchedule
+	focus: string
+	description: string
 	link: string
 }
 

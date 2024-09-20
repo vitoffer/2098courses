@@ -15,7 +15,7 @@ const isFiltersSectionVisible = ref(window.innerWidth >= 768)
 				isFiltersSectionVisible = !isFiltersSectionVisible
 			"
 		/>
-		<FiltersSection :is-filters-section-visible="isFiltersSectionVisible" />
+		<!-- <FiltersSection :is-filters-section-visible="isFiltersSectionVisible" /> -->
 		<CoursesSection />
 	</main>
 </template>

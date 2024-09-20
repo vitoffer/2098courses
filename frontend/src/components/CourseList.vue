@@ -31,7 +31,11 @@ onMounted(async () => {
 })
 
 async function getFetchedCourseList() {
-	const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/courses`)
+	const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/courses`, {
+		mode: "no-cors",
+	})
+	console.log(response)
+
 	const data = await response.json()
 
 	return data
