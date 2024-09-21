@@ -13,14 +13,35 @@ defineEmits(["confirmDeletion", "showEditCourseDialog", "showCoursePreview"])
 
 const route = useRoute()
 
-const formattedSchedule = getFormattedSchedule(props.course.schedule)
+// const formattedSchedule = getFormattedSchedule(props.course.schedule)
 </script>
 
 <template>
-	<article class="course-card card">
+	<article
+		class="course-card card"
+		:style="{
+			paddingBottom:
+				route.fullPath.includes('admin') && !course.link
+					? '32px !important'
+					: '',
+		}"
+	>
 		<h3 class="card__name">{{ course.name }}</h3>
-		<p class="card__focus">{{ course.focus }}</p>
-		<p class="card__description">{{ course.description }}</p>
+		<p
+			v-if="course.focus"
+			class="card__focus"
+		>
+			{{ course.focus }} Lorem ipsum dolor sit amet consectetur adipisicing
+			elit. Vero, inventore!
+		</p>
+		<p
+			v-if="course.description"
+			class="card__description"
+		>
+			{{ course.description }} Lorem ipsum dolor, sit amet consectetur
+			adipisicing elit. Quae ipsum doloremque dignissimos molestiae similique
+			vitae cumque fugit. Doloribus, maiores debitis.
+		</p>
 		<hr class="card__divider" />
 		<div class="card__group">
 			<i class="pi pi-map-marker" />
@@ -32,18 +53,24 @@ const formattedSchedule = getFormattedSchedule(props.course.schedule)
 		</div>
 		<div class="card__group">
 			<i class="pi pi-star" />
-			<span class="card__age">{{ course.age?.join(", ") }}</span>
+			<span class="card__age">{{ course.forAges }} лет</span>
 		</div>
 		<div class="card__group">
 			<i class="pi pi-calendar" />
-			<span class="card__schedule">{{ formattedSchedule }}</span>
+			<span class="card__schedule">
+				{{
+					`Пн: ${course.monday}, Вт: ${course.tuesday}, Ср: ${course.wednesday}, Чт: ${course.thursday}, Пт: ${course.friday}, Сб: ${course.saturday}`
+				}}
+			</span>
 		</div>
 		<div class="card__group card__group--price">
 			<i class="pi pi-tag" />
-			<span class="card__price">{{ course.price }}</span>
+			<span class="card__price">
+				{{ course.isPaid ? "Платно" : "Бесплатно" }}
+			</span>
 		</div>
 		<a
-			v-if="route.fullPath.includes('admin')"
+			v-if="course.link && route.fullPath.includes('admin')"
 			:href="course.link"
 			class="card__group card__group--link"
 		>
@@ -60,13 +87,13 @@ const formattedSchedule = getFormattedSchedule(props.course.schedule)
 			>
 				Подробнее
 			</button>
-			<a
+			<!-- <a
 				:href="course.link"
 				target="_blank"
 				class="button--course-signup button"
 			>
 				Записаться
-			</a>
+			</a> -->
 		</div>
 		<div
 			v-else

@@ -22,14 +22,20 @@ export function useEditCourse(selectedCourseId: Ref<string | null>) {
 			: reactive({
 					id: "new",
 					name: "",
-					focus: "",
-					description: "",
+					// focus: "",
+					// description: "",
 					teacher: "",
 					address: "",
-					age: [],
-					price: "Бесплатно",
-					schedule: {},
-					link: "",
+					forAges: "",
+					isPaid: false,
+					// schedule: {},
+					monday: "",
+					tuesday: "",
+					wednesday: "",
+					thursday: "",
+					friday: "",
+					saturday: "",
+					// link: "",
 				})
 	})
 

@@ -7,21 +7,31 @@ const props = defineProps<{
 	course?: ICourse
 }>()
 
-const formattedSchedule = computed(() =>
-	getFormattedSchedule(props.course!.schedule),
-)
+// const formattedSchedule = computed(() =>
+// 	getFormattedSchedule(props.course!.schedule),
+// )
 </script>
 
 <template>
 	<section class="dialog">
-		<p class="focus">{{ course?.focus }}</p>
-		<p>{{ course?.description }}</p>
+		<p
+			class="focus"
+			v-if="course?.focus"
+		>
+			{{ course?.focus }}
+		</p>
+		<p v-if="course?.description">{{ course?.description }}</p>
 		<p>{{ course?.address }}</p>
 		<p>{{ course?.teacher }}</p>
-		<p>{{ course?.age.join(", ") }}</p>
-		<p>{{ formattedSchedule }}</p>
-		<p>{{ course?.price }}</p>
+		<p>{{ course?.forAges }} лет</p>
+		<p>
+			{{
+				`Пн: ${course?.monday}, Вт: ${course?.tuesday}, Ср: ${course?.wednesday}, Чт: ${course?.thursday}, Пт: ${course?.friday}, Сб: ${course?.saturday}`
+			}}
+		</p>
+		<p>{{ course?.isPaid ? "Платно" : "Бесплатно" }}</p>
 		<a
+			v-if="course?.link"
 			:href="course?.link"
 			target="_blank"
 			class="button--course-signup button"

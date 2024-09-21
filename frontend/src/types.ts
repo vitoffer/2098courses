@@ -13,9 +13,9 @@ export interface ICourse {
 	friday: string
 	saturday: string
 	// schedule: ISchedule
-	focus: string
-	description: string
-	link: string
+	focus?: string
+	description?: string
+	link?: string
 }
 
 export type TWeekday = "Пн" | "Вт" | "Ср" | "Чт" | "Пт" | "Сб" | "Вс"

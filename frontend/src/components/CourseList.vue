@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, toRefs, type Ref } from "vue"
+import { onMounted, ref, toRefs, watchEffect, type Ref } from "vue"
 import { useConfirm } from "primevue/useconfirm"
 import ConfirmDialog from "primevue/confirmdialog"
 import CourseCard from "@/components/CourseCard.vue"
@@ -20,6 +20,10 @@ const route = useRoute()
 const selectedCourseId: Ref<string | null> = ref(null)
 
 const { editingCourse } = useEditCourse(selectedCourseId)
+
+watchEffect(() => {
+	console.log(editingCourse.value)
+})
 const { isEditCourseDialogVisible } = toRefs(useEditCourseDialogStore())
 
 const isCoursePreviewDialogVisible = ref(false)
@@ -31,12 +35,18 @@ onMounted(async () => {
 })
 
 async function getFetchedCourseList() {
-	const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/courses`, {
-		mode: "no-cors",
-	})
-	console.log(response)
+	const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/courses`)
 
 	const data = await response.json()
+
+	data.forEach((course) => {
+		course["forAges"] = course["for_ages"]
+		delete course["for_ages"]
+		course["isPaid"] = course["is_paid"]
+		delete course["is_paid"]
+	})
+
+	console.log(data)
 
 	return data
 }
@@ -146,7 +156,8 @@ function showCoursePreview(courseId: string) {
 }
 
 .p-dialog {
-	width: 80vw !important;
+	width: max-content !important;
+	max-width: 80vw !important;
 
 	@media (max-width: 767px) {
 		width: 100% !important;

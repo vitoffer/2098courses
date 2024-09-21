@@ -5,17 +5,21 @@ import AutoComplete from "primevue/autocomplete"
 import MultiSelect from "primevue/multiselect"
 import Select from "primevue/select"
 import Textarea from "primevue/textarea"
-import { ref, toRefs } from "vue"
+import { ref, toRefs, watchEffect } from "vue"
 
-const courseModel = defineModel<ICourse>()
+const courseModel = defineModel()
 
-const {
-	focuses: filterFocusesOptions,
-	addresses: filterAddressesOptions,
-	teachers: filterTeachersOptions,
-} = toRefs(useFilterOptionsStore())
+// const {
+// 	focuses: filterFocusesOptions,
+// 	addresses: filterAddressesOptions,
+// 	teachers: filterTeachersOptions,
+// } = toRefs(useFilterOptionsStore())
 
 const scheduleModel = ref("")
+
+watchEffect(() => {
+	console.log(courseModel.value)
+})
 </script>
 
 <template>
@@ -26,12 +30,12 @@ const scheduleModel = ref("")
 			placeholder="Название"
 			v-model="courseModel!.name"
 		/>
-		<Select
+		<!-- <Select
 			placeholder="Направленность"
 			v-model="courseModel!.focus"
 			:options="filterFocusesOptions"
 			option-label="name"
-		/>
+		/> -->
 		<Textarea
 			placeholder="Описание"
 			v-model="courseModel!.description"
@@ -40,7 +44,7 @@ const scheduleModel = ref("")
 			rows="10"
 			class="base-input"
 		/>
-		<AutoComplete
+		<!-- <AutoComplete
 			placeholder="Адрес"
 			:suggestions="filterAddressesOptions"
 			v-model="courseModel!.address"
@@ -51,11 +55,17 @@ const scheduleModel = ref("")
 			:suggestions="filterTeachersOptions"
 			v-model="courseModel!.teacher"
 			pt:pc-input="base-input"
-		/>
-		<MultiSelect
+		/> -->
+		<!-- <MultiSelect
 			placeholder="Возраст"
 			:options="Array.from({ length: 97 }, (_, i) => i + 3)"
-			v-model="courseModel!.age"
+			v-model="courseModel!.forAges"
+		/> -->
+		<input
+			type="text"
+			class="base-input"
+			placeholder="Возраст в формате '10-11' или '12,13,14'"
+			v-model="courseModel!.forAges"
 		/>
 		<input
 			type="text"
@@ -64,8 +74,13 @@ const scheduleModel = ref("")
 			v-model="scheduleModel"
 		/>
 		<Select
-			:options="['Бесплатно', 'Платно']"
-			v-model="courseModel!.price"
+			:options="[
+				{ name: 'Бесплатно', value: false },
+				{ name: 'Платно', value: true },
+			]"
+			v-model="courseModel!.isPaid"
+			option-label="name"
+			option-value="value"
 		/>
 		<input
 			type="text"
@@ -79,6 +94,10 @@ const scheduleModel = ref("")
 <style scoped lang="scss">
 :deep(.p-inputtext) {
 	width: 100% !important;
+}
+
+:deep(.p-select-label) {
+	color: var(--text-black) !important;
 }
 </style>
 
