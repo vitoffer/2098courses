@@ -21,9 +21,6 @@ const selectedCourseId: Ref<string | null> = ref(null)
 
 const { editingCourse } = useEditCourse(selectedCourseId)
 
-watchEffect(() => {
-	console.log(editingCourse.value)
-})
 const { isEditCourseDialogVisible } = toRefs(useEditCourseDialogStore())
 
 const isCoursePreviewDialogVisible = ref(false)
@@ -45,8 +42,6 @@ async function getFetchedCourseList() {
 		course["isPaid"] = course["is_paid"]
 		delete course["is_paid"]
 	})
-
-	console.log(data)
 
 	return data
 }

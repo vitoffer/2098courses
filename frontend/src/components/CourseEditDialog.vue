@@ -5,7 +5,7 @@ import AutoComplete from "primevue/autocomplete"
 import MultiSelect from "primevue/multiselect"
 import Select from "primevue/select"
 import Textarea from "primevue/textarea"
-import { ref, toRefs, watchEffect } from "vue"
+import { ref } from "vue"
 
 const courseModel = defineModel()
 
@@ -16,10 +16,6 @@ const courseModel = defineModel()
 // } = toRefs(useFilterOptionsStore())
 
 const scheduleModel = ref("")
-
-watchEffect(() => {
-	console.log(courseModel.value)
-})
 </script>
 
 <template>
