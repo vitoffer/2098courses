@@ -4,13 +4,15 @@ from typing import Annotated
 
 # import openpyxl as xl
 from docx.api import Document
+from docx.table import _Row
 from sqlmodel import Session, select
-from models.models import Course
+from models.models import Course, Schedule
 from models.database import get_session
 from .models import DeleteTables, UploadTabelToDb, CourseType
 from conf.settings import BASE_DIR
 from fastapi import APIRouter, UploadFile, Depends, HTTPException, status
 from routers.auth import get_current_active_user, User
+from conf.depencies import super_user
 
 import bs4
 import requests
@@ -23,6 +25,12 @@ KEYS = [
     'name',
     'for_ages',
     'class',
+    'address',
+    'is_paid',
+    'description',
+]
+
+DAYS = [
     'monday',
     'tuesday',
     'wednesday',
@@ -42,6 +50,18 @@ def is_super_user(user: User):
             headers={'WWW-Authenticate': 'Bearer'},
         )
     return True
+
+
+def convert_to_models(args):
+    k, row, address, is_paid = args
+    if k <= 1:
+        return None, None
+    text = [cell.text for cell in row.cells[:4]]
+    days = [cell.text for cell in row.cells[4:]]
+    text.extend((address, is_paid, ''))
+    return {KEYS[_]: text[_] for _ in range(len(KEYS))}, {
+        DAYS[_]: days[_] for _ in range(len(DAYS)) if days[_] != ''
+    }
 
 
 # Парсер для получения списка учителей
@@ -74,7 +94,6 @@ async def upload_table(
     is_super_user(current_user)
     with open(f'{TABLES_DIR}/{table.filename}', 'wb') as buffer:
         copyfileobj(table.file, buffer)
-
     return {'filename': table.filename}
 
 
@@ -105,20 +124,32 @@ async def add_to_base(
 ):
     is_super_user(current_user)
     for name in tables.tables_names:
+        all = []
         document = Document(f'{TABLES_DIR}/{name}')
-        tables = document.tables
-        for j in tables:
-            for k, row in enumerate(j.rows):
-                if k > 1:
-                    text = [cell.text for cell in row.cells]
-                    data = {KEYS[_]: text[_] for _ in range(len(text))}
-                    if 'is_paid' not in data.keys():
-                        data['is_paid'] = False
-                    if 'address' not in data.keys():
-                        data['address'] = ''
-                    session.add(Course(**data))
+        tablesDocx = document.tables
+        paragraphs = document.paragraphs
+        address = paragraphs[-2].text
+        is_paid = (
+            False if paragraphs[0].text.split()[-1] == '(БЮДЖЕТ)' else True
+        )
+        courses = list(
+            map(
+                convert_to_models,
+                (
+                    [k, row, address, is_paid]
+                    for k, row in enumerate(tablesDocx[0].rows)
+                ),
+            )
+        )[2:]
+        all.extend(courses)
+    for course, schedule in all:
+        c, s = Course(**course), Schedule(**schedule)
+        session.add(s)
         session.commit()
-        return {'Result': 'Success'}
+        c.schedule_id = s.id
+        session.add(c)
+    session.commit()
+    return {'Result': 'Success'}
 
 
 @router.post('/add_course')

@@ -30,3 +30,12 @@ def cerate_su():
         return
     print('Password are not correct')
     return
+
+
+def super_user(view):
+    def check(*args, **kwargs):
+        print(len(args), len(kwargs))
+        result = view(*args, **kwargs)
+        return result
+
+    return check

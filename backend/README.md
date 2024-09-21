@@ -81,3 +81,6 @@ docker build -t <name_what_you_prefer> .
 ```sh
 docker run -p 80:80 <image_name>
 ```
+
+<!-- Сделать расписание словариком -->
+<!-- миграция с переносом данных -->
