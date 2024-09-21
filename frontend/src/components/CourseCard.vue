@@ -13,7 +13,7 @@ defineEmits(["confirmDeletion", "showEditCourseDialog", "showCoursePreview"])
 
 const route = useRoute()
 
-// const formattedSchedule = getFormattedSchedule(props.course.schedule)
+const formattedSchedule = getFormattedSchedule(props.course.schedule)
 </script>
 
 <template>
@@ -28,19 +28,16 @@ const route = useRoute()
 	>
 		<h3 class="card__name">{{ course.name }}</h3>
 		<p
-			v-if="course.focus"
+			v-if="course.orientation"
 			class="card__focus"
 		>
-			{{ course.focus }} Lorem ipsum dolor sit amet consectetur adipisicing
-			elit. Vero, inventore!
+			{{ course.orientation }} направленность
 		</p>
 		<p
 			v-if="course.description"
 			class="card__description"
 		>
-			{{ course.description }} Lorem ipsum dolor, sit amet consectetur
-			adipisicing elit. Quae ipsum doloremque dignissimos molestiae similique
-			vitae cumque fugit. Doloribus, maiores debitis.
+			{{ course.description }}
 		</p>
 		<hr class="card__divider" />
 		<div class="card__group">
@@ -53,14 +50,12 @@ const route = useRoute()
 		</div>
 		<div class="card__group">
 			<i class="pi pi-star" />
-			<span class="card__age">{{ course.forAges }} лет</span>
+			<span class="card__age">{{ course.forAges }} класс</span>
 		</div>
 		<div class="card__group">
 			<i class="pi pi-calendar" />
 			<span class="card__schedule">
-				{{
-					`Пн: ${course.monday}, Вт: ${course.tuesday}, Ср: ${course.wednesday}, Чт: ${course.thursday}, Пт: ${course.friday}, Сб: ${course.saturday}`
-				}}
+				{{ formattedSchedule }}
 			</span>
 		</div>
 		<div class="card__group card__group--price">
@@ -87,13 +82,14 @@ const route = useRoute()
 			>
 				Подробнее
 			</button>
-			<!-- <a
+			<a
+				v-if="course.link"
 				:href="course.link"
 				target="_blank"
 				class="button--course-signup button"
 			>
 				Записаться
-			</a> -->
+			</a>
 		</div>
 		<div
 			v-else
@@ -122,7 +118,7 @@ const route = useRoute()
 	flex-direction: column;
 	gap: 4px;
 	max-width: 320px;
-	padding: 8px 12px 12px;
+	padding: 12px 12px 12px;
 	border-radius: 10px;
 	box-shadow: 0 0 8px 0 rgba(0 0 0 / 0.2);
 

@@ -10,6 +10,7 @@ import { useEditCourseDialogStore } from "@/stores/editCourseDialog"
 import CourseEditDialog from "./CourseEditDialog.vue"
 import CoursePreviewDialog from "./CoursePreviewDialog.vue"
 import { useRoute } from "vue-router"
+import type { ICourse, ISchedule } from "@/types"
 
 const { courseList, filteredCourseList } = toRefs(useCourseListStore())
 
@@ -36,14 +37,30 @@ async function getFetchedCourseList() {
 
 	const data = await response.json()
 
-	data.forEach((course) => {
-		course["forAges"] = course["for_ages"]
-		delete course["for_ages"]
-		course["isPaid"] = course["is_paid"]
-		delete course["is_paid"]
+	interface ITempCourse {
+		id: string
+		is_paid: boolean
+		address: string
+		teacher: string
+		for_ages: string
+		name: string
+		schedule: ISchedule
+		orientation: string
+		description: string
+		link?: string
+	}
+
+	const camelizedData: ICourse[] = data.map((item: ITempCourse) => {
+		return Object.keys(item).reduce((acc, key) => {
+			const camelizedKey = key.replace(/_([a-z])/g, (match, group) =>
+				group.toUpperCase(),
+			)
+			acc[camelizedKey] = item[key]
+			return acc
+		}, {})
 	})
 
-	return data
+	return camelizedData
 }
 
 function showEditCourseDialog(selectedId: string) {

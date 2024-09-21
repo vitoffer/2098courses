@@ -14,10 +14,18 @@ export async function checkMultiSelectItems() {
 export function getFormattedSchedule(schedule: ISchedule) {
 	const formattedScheduleArray: string[] = []
 
-	Object.entries(schedule ?? {}).forEach(([weekday, timeArray]) => {
-		formattedScheduleArray.push(
-			`${weekday as TWeekday}: ${(timeArray as string[]).join(", ")}`,
-		)
+	const weekdayAlign = {
+		monday: "Пн",
+		tuesday: "Вт",
+		wednesday: "Ср",
+		thursday: "Чт",
+		friday: "Пт",
+		saturday: "Сб",
+	}
+
+	Object.entries(schedule ?? {}).forEach(([key, value]) => {
+		if (key === "id") return
+		formattedScheduleArray.push(`${weekdayAlign[key] as TWeekday}: ${value}`)
 	})
 
 	return formattedScheduleArray.join(", ")
