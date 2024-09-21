@@ -15,6 +15,11 @@ class CourseType(BaseModel):
     teacher: str
     for_ages: str
     name: str
+    description: str
+    orientation: str
+
+
+class ScheduleType(BaseModel):
     monday: str | None
     tuesday: str | None
     wednesday: str | None

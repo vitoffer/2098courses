@@ -8,7 +8,7 @@ from docx.table import _Row
 from sqlmodel import Session, select
 from models.models import Course, Schedule
 from models.database import get_session
-from .models import DeleteTables, UploadTabelToDb, CourseType
+from .models import DeleteTables, UploadTabelToDb, CourseType, ScheduleType
 from conf.settings import BASE_DIR
 from fastapi import APIRouter, UploadFile, Depends, HTTPException, status
 from routers.auth import get_current_active_user, User
@@ -155,11 +155,17 @@ async def add_to_base(
 @router.post('/add_course')
 async def add_course(
     course: CourseType,
+    schedule: ScheduleType,
     current_user: Annotated[User, Depends(get_current_active_user)],
     session: Session = Depends(get_session),
 ):
     is_super_user(current_user)
-    session.add(Course(**course.model_dump()))
+    sc = Schedule(**schedule.model_dump())
+    session.add(sc)
+    session.commit()
+    c = course.model_dump()
+    c.update({'schedule_id': sc.id})
+    session.add(Course(**c))
     session.commit()
     return {'Result': 'Success'}
 
@@ -168,11 +174,14 @@ async def add_course(
 async def change_course(
     id: int,
     course: CourseType,
+    schedule: ScheduleType,
     current_user: Annotated[User, Depends(get_current_active_user)],
     session: Session = Depends(get_session),
 ):
     is_super_user(current_user)
     course_model = session.exec(select(Course).where(Course.id == id)).one()
+    schedule_model = course_model.schedule
+    session.add(schedule_model.sqlmodel_update(schedule.model_dump()))
     session.add(course_model.sqlmodel_update(course.model_dump()))
     session.commit()
     return {'Result': 'Success'}
@@ -186,5 +195,8 @@ async def delete_course(
 ):
     is_super_user(current_user)
     session.delete(session.exec(select(Course).where(Course.id == id)).one())
+    session.delete(
+        session.exec(select(Schedule).where(Schedule.id == id)).one()
+    )
     session.commit()
     return {'Result': 'Success'}
