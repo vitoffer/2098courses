@@ -150,4 +150,13 @@ async function pushTable(tableName: string) {
 		color: var(--text-white);
 	}
 }
+
+:deep(.p-fileupload-choose-button) {
+	background-color: var(--blue-primary) !important;
+	border: none !important;
+
+	* {
+		color: var(--text-white) !important;
+	}
+}
 </style>
