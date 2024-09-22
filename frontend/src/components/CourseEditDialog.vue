@@ -24,62 +24,49 @@ const weekdaysOrder = {
 	saturday: 6,
 }
 
-const scheduleModel = ref(
-	Object.keys(courseModel.value.schedule)
-		.filter((key) => key !== "id")
-		.sort((a, b) => weekdaysOrder[a] - weekdaysOrder[b])
-		.map((key) => {
-			const weekday = {
-				monday: "Пн",
-				tuesday: "Вт",
-				wednesday: "Ср",
-				thursday: "Чт",
-				friday: "Пт",
-				saturday: "Сб",
-			}[key]
-			return `${weekday}: ${courseModel.value.schedule[key]}`
-		})
-		.join("; "),
-)
+const scheduleModel = ref(courseModel.value.schedule)
 
-function scheduleModelToObject() {
-	return scheduleModel.value.split(";").reduce((acc, part) => {
-		const [day, time] = part.trim().split(":")
-		const weekday = {
-			Пн: "monday",
-			Вт: "tuesday",
-			Ср: "wednesday",
-			Чт: "thursday",
-			Пт: "friday",
-			Сб: "saturday",
-		}[day.trim()]
-		acc[weekday] = time.trim()
-		return acc
-	}, {})
-}
+console.log(scheduleModel)
+
+// function scheduleModelToObject() {
+// 	return scheduleModel.value.split(";").reduce((acc, part) => {
+// 		const [day, time] = part.trim().split(":")
+// 		const weekday = {
+// 			Пн: "monday",
+// 			Вт: "tuesday",
+// 			Ср: "wednesday",
+// 			Чт: "thursday",
+// 			Пт: "friday",
+// 			Сб: "saturday",
+// 		}[day.trim()]
+// 		acc[weekday] = time.trim()
+// 		return acc
+// 	}, {})
+// }
 
 function saveCourse() {
-	if (courseModel.value.id === -1) {
-		addCourse()
-		return
-	}
-	editCourse()
-}
-
-async function addCourse() {
 	const body = {
 		course: {
 			is_paid: courseModel.value?.isPaid,
-			address: courseModel.value?.address,
-			teacher: courseModel.value?.teacher,
-			for_ages: courseModel.value?.forAges,
-			name: courseModel.value?.name,
-			description: courseModel.value?.description,
-			orientation: courseModel.value?.orientation,
+			address: courseModel.value?.address || "",
+			teacher: courseModel.value?.teacher || "",
+			for_ages: courseModel.value?.forAges || "",
+			name: courseModel.value?.name || "",
+			description: courseModel.value?.description || "",
+			orientation: courseModel.value?.orientation || "",
 		},
-		schedule: scheduleModelToObject(),
+		schedule: scheduleModel.value,
 	}
 
+	if (courseModel.value.id === -1) {
+		addCourse(body)
+		return
+	}
+
+	editCourse(body)
+}
+
+async function addCourse(body) {
 	const response = await fetch(
 		`${import.meta.env.VITE_BASE_API_URL}/admin/add_course`,
 		{
@@ -97,7 +84,25 @@ async function addCourse() {
 	console.log(data.Result)
 }
 
-async function editCourse() {}
+async function editCourse(body) {
+	console.log(body)
+
+	const response = await fetch(
+		`${import.meta.env.VITE_BASE_API_URL}/admin/change_course/${courseModel.value.id}`,
+		{
+			method: "PATCH",
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(body),
+		},
+	)
+
+	const data = await response.json()
+
+	console.log(data.Result)
+}
 </script>
 
 <template>
@@ -108,11 +113,13 @@ async function editCourse() {}
 			placeholder="Название"
 			v-model="courseModel!.name"
 		/>
-		<Select
+		<AutoComplete
 			placeholder="Направленность"
-			v-model="courseModel!.orientation"
-			:options="filterOrientationsOptions"
+			:suggestions="filterOrientationsOptions"
+			v-model="courseModel.orientation"
+			pt:pc-input="base-input"
 		/>
+
 		<Textarea
 			placeholder="Описание"
 			v-model="courseModel!.description"
@@ -141,10 +148,41 @@ async function editCourse() {}
 		/>
 		<input
 			type="text"
-			class="base-input input-schedule"
-			placeholder='Расписание в формате "Пн: 17:30-18:30; Вт: 19:30-20:00"'
-			v-model="scheduleModel"
+			class="base-input"
+			placeholder="Время в понедельник"
+			v-model="scheduleModel.monday"
 		/>
+		<input
+			type="text"
+			class="base-input"
+			placeholder="Время во вторник"
+			v-model="scheduleModel.tuesday"
+		/>
+		<input
+			type="text"
+			class="base-input"
+			placeholder="Время в среду"
+			v-model="scheduleModel.wednesday"
+		/>
+		<input
+			type="text"
+			class="base-input"
+			placeholder="Время в четверг"
+			v-model="scheduleModel.thursday"
+		/>
+		<input
+			type="text"
+			class="base-input"
+			placeholder="Время в пятницу"
+			v-model="scheduleModel.friday"
+		/>
+		<input
+			type="text"
+			class="base-input"
+			placeholder="Время в субботу"
+			v-model="scheduleModel.saturday"
+		/>
+
 		<Select
 			:options="[
 				{ name: 'Бесплатно', value: false },
@@ -174,6 +212,7 @@ async function editCourse() {}
 <style scoped lang="scss">
 :deep(.p-inputtext) {
 	width: 100% !important;
+	color: var(--text-black) !important;
 }
 
 :deep(.p-select-label) {

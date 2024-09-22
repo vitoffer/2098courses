@@ -36,7 +36,7 @@ export function getFormattedSchedule(schedule: ISchedule) {
 	const formattedScheduleArray: string[] = []
 
 	weekdayOrder.forEach((key) => {
-		if (schedule[key] !== null) {
+		if (schedule[key]) {
 			formattedScheduleArray.push(
 				`${weekdayAlign[key] as TWeekday}: ${schedule[key]}`,
 			)
