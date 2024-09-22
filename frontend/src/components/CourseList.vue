@@ -109,27 +109,27 @@ function showCoursePreview(courseId: number) {
 </script>
 
 <template>
+	<ConfirmDialog />
+	<Dialog
+		v-if="route.fullPath.includes('admin')"
+		append-to="#adminView"
+		v-model:visible="isEditCourseDialogVisible"
+		modal
+		:header="selectedCourseId ? 'Редактирование кружка' : 'Добавление кружка'"
+		@after-hide="selectedCourseId = null"
+	>
+		<CourseEditDialog v-model="editingCourse" />
+	</Dialog>
+	<Dialog
+		v-model:visible="isCoursePreviewDialogVisible"
+		modal
+		:header="courseList.find((course) => course.id === coursePreviewId)?.name"
+	>
+		<CoursePreviewDialog
+			:course="courseList.find((course) => course.id === coursePreviewId)"
+		/>
+	</Dialog>
 	<ul class="courses-list">
-		<ConfirmDialog />
-		<Dialog
-			v-if="route.fullPath.includes('admin')"
-			append-to="#adminView"
-			v-model:visible="isEditCourseDialogVisible"
-			modal
-			:header="selectedCourseId ? 'Редактирование кружка' : 'Добавление кружка'"
-			@after-hide="selectedCourseId = null"
-		>
-			<CourseEditDialog v-model="editingCourse" />
-		</Dialog>
-		<Dialog
-			v-model:visible="isCoursePreviewDialogVisible"
-			modal
-			:header="courseList.find((course) => course.id === coursePreviewId)?.name"
-		>
-			<CoursePreviewDialog
-				:course="courseList.find((course) => course.id === coursePreviewId)"
-			/>
-		</Dialog>
 		<li
 			class="courses-list__item"
 			v-for="course in filteredCourseList"
@@ -147,9 +147,9 @@ function showCoursePreview(courseId: number) {
 
 <style scoped lang="scss">
 .courses-list {
-	display: flex;
-	flex-wrap: wrap;
+	display: grid;
 	justify-content: center;
+	grid-template-columns: repeat(4, min(100%, 320px));
 	gap: 16px;
 	padding: 0 16px 16px;
 
