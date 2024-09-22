@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useFilterOptionsStore } from "@/stores/filterOptions"
 import type { ICourse } from "@/types"
-import AutoComplete from "primevue/autocomplete"
+import AutoComplete, {
+	type AutoCompleteCompleteEvent,
+} from "primevue/autocomplete"
 import MultiSelect from "primevue/multiselect"
 import Select from "primevue/select"
 import Textarea from "primevue/textarea"
@@ -25,24 +27,6 @@ const weekdaysOrder = {
 }
 
 const scheduleModel = ref(courseModel.value.schedule)
-
-console.log(scheduleModel)
-
-// function scheduleModelToObject() {
-// 	return scheduleModel.value.split(";").reduce((acc, part) => {
-// 		const [day, time] = part.trim().split(":")
-// 		const weekday = {
-// 			Пн: "monday",
-// 			Вт: "tuesday",
-// 			Ср: "wednesday",
-// 			Чт: "thursday",
-// 			Пт: "friday",
-// 			Сб: "saturday",
-// 		}[day.trim()]
-// 		acc[weekday] = time.trim()
-// 		return acc
-// 	}, {})
-// }
 
 function saveCourse() {
 	const body = {
@@ -85,8 +69,6 @@ async function addCourse(body) {
 }
 
 async function editCourse(body) {
-	console.log(body)
-
 	const response = await fetch(
 		`${import.meta.env.VITE_BASE_API_URL}/admin/change_course/${courseModel.value.id}`,
 		{
@@ -103,6 +85,57 @@ async function editCourse(body) {
 
 	console.log(data.Result)
 }
+
+const orientationItems = ref([])
+const addressItems = ref([])
+const teacherItems = ref([])
+
+const searchOrientation = (event: AutoCompleteCompleteEvent) => {
+	setTimeout(() => {
+		if (event.query.trim().length === 0) {
+			orientationItems.value = filterOrientationsOptions.value
+		} else {
+			orientationItems.value = filterOrientationsOptions.value.filter(
+				(orientation) => {
+					if (orientation)
+						return (orientation as string)
+							.toLowerCase()
+							.includes(event.query.toLowerCase())
+				},
+			)
+		}
+	}, 250)
+}
+
+const searchAddress = (event: AutoCompleteCompleteEvent) => {
+	setTimeout(() => {
+		if (event.query.trim().length === 0) {
+			addressItems.value = filterAddressesOptions.value
+		} else {
+			addressItems.value = filterAddressesOptions.value.filter((address) => {
+				if (address)
+					return (address as string)
+						.toLowerCase()
+						.includes(event.query.toLowerCase())
+			})
+		}
+	}, 250)
+}
+
+const searchTeacher = (event: AutoCompleteCompleteEvent) => {
+	setTimeout(() => {
+		if (event.query.trim().length === 0) {
+			teacherItems.value = filterTeachersOptions.value
+		} else {
+			teacherItems.value = filterTeachersOptions.value.filter((teacher) => {
+				if (teacher)
+					return (teacher as string)
+						.toLowerCase()
+						.includes(event.query.toLowerCase())
+			})
+		}
+	}, 250)
+}
 </script>
 
 <template>
@@ -115,11 +148,12 @@ async function editCourse(body) {
 		/>
 		<AutoComplete
 			placeholder="Направленность"
-			:suggestions="filterOrientationsOptions"
+			:suggestions="orientationItems"
 			v-model="courseModel.orientation"
 			pt:pc-input="base-input"
+			@complete="searchOrientation"
+			dropdown
 		/>
-
 		<Textarea
 			placeholder="Описание"
 			v-model="courseModel!.description"
@@ -130,15 +164,19 @@ async function editCourse(body) {
 		/>
 		<AutoComplete
 			placeholder="Адрес"
-			:suggestions="filterAddressesOptions"
+			:suggestions="addressItems"
 			v-model="courseModel.address"
 			pt:pc-input="base-input"
+			@complete="searchAddress"
+			dropdown
 		/>
 		<AutoComplete
 			placeholder="Преподаватель"
-			:suggestions="filterTeachersOptions"
+			:suggestions="teacherItems"
 			v-model="courseModel!.teacher"
 			pt:pc-input="base-input"
+			@complete="searchTeacher"
+			dropdown
 		/>
 		<input
 			type="text"
