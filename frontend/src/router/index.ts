@@ -16,13 +16,10 @@ async function guard(next: NavigationGuardNext) {
 			},
 		},
 	)
-	if (response.status !== 401) {
+	if (response.ok) {
 		next()
 		return
 	}
-	// router.push({
-	// 	name: "login",
-	// })
 	next({ name: "login" })
 }
 

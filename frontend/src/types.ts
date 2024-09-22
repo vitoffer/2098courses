@@ -21,3 +21,18 @@ export interface ISchedule {
 }
 
 export type TWeekday = "Пн" | "Вт" | "Ср" | "Чт" | "Пт" | "Сб"
+
+export type TFilterSearch = string | null
+export type TFilterOrientation = string | null
+export type TFilterAddress = string | null
+export type TFilterTeacher = string | null
+export type TFilterAge = number | null
+export type TFilterIsPaid = boolean | null
+export type TFilterWeekday =
+	| "monday"
+	| "tuesday"
+	| "wednesday"
+	| "thursday"
+	| "friday"
+	| "saturday"
+export type TFilterTime = string | null

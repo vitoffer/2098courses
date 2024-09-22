@@ -10,7 +10,7 @@ import { ref } from "vue"
 const courseModel = defineModel()
 
 // const {
-// 	focuses: filterFocusesOptions,
+// 	orientations: filterOrientationsOptions,
 // 	addresses: filterAddressesOptions,
 // 	teachers: filterTeachersOptions,
 // } = toRefs(useFilterOptionsStore())
@@ -28,8 +28,8 @@ const scheduleModel = ref("")
 		/>
 		<!-- <Select
 			placeholder="Направленность"
-			v-model="courseModel!.focus"
-			:options="filterFocusesOptions"
+			v-model="courseModel!.orientation"
+			:options="filterOrientationsOptions"
 			option-label="name"
 		/> -->
 		<Textarea

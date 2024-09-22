@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { toRefs } from "vue"
+import { toRefs, watchEffect } from "vue"
 import MultiSelect from "primevue/multiselect"
 import Select from "primevue/select"
 import { checkMultiSelectItems } from "@/modules/functions"
@@ -7,23 +7,44 @@ import { useFilterModelsStore } from "@/stores/filterModels"
 import { useFilterOptionsStore } from "@/stores/filterOptions"
 
 const {
-	selectedFocuses: filterFocusesModel,
+	selectedOrientations: filterOrientationsModel,
 	selectedAddresses: filterAddressesModel,
 	selectedTeachers: filterTeachersModel,
-	selectedAge: filterAgeModel,
-	selectedPrice: filterPriceModel,
+	selectedAges: filterAgesModel,
+	selectedIsPaid: filterIsPaidModel,
 	selectedWeekdays: filterWeekdaysModel,
 	selectedTime: filterTimeModel,
 } = toRefs(useFilterModelsStore())
 
 const {
-	focuses: filterFocusesOptions,
+	orientations: filterOrientationsOptions,
 	addresses: filterAddressesOptions,
 	teachers: filterTeachersOptions,
 } = toRefs(useFilterOptionsStore())
 
-const weekdaysOptions = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
-const priceOptions = ["Платно", "Бесплатно"]
+const weekdaysOptions = [
+	{ programValue: "monday", displayValue: "Пн" },
+	{ programValue: "tuesday", displayValue: "Вт" },
+	{ programValue: "wednesday", displayValue: "Ср" },
+	{ programValue: "thursday", displayValue: "Чт" },
+	{ programValue: "friday", displayValue: "Пт" },
+	{ programValue: "saturday", displayValue: "Сб" },
+]
+const ageOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+const isPaidOptions = [
+	{ programValue: true, displayValue: "Платно" },
+	{ programValue: false, displayValue: "Бесплатно" },
+]
+
+// watchEffect(() => {
+// 	console.log(filterOrientationsModel.value)
+// 	console.log(filterAddressesModel.value)
+// 	console.log(filterTeachersModel.value)
+// 	console.log(filterAgesModel.value)
+// 	console.log(filterIsPaidModel.value)
+// 	console.log(filterWeekdaysModel.value)
+// 	console.log(filterTimeModel.value)
+// })
 </script>
 
 <template>
@@ -31,9 +52,8 @@ const priceOptions = ["Платно", "Бесплатно"]
 		<li class="filter-list__item filter-item">
 			<MultiSelect
 				class="filter-item__input"
-				v-model="filterFocusesModel"
-				:options="filterFocusesOptions"
-				option-label="name"
+				v-model="filterOrientationsModel"
+				:options="filterOrientationsOptions"
 				placeholder="Направленность"
 				filter
 				:max-selected-labels="2"
@@ -46,7 +66,6 @@ const priceOptions = ["Платно", "Бесплатно"]
 				class="filter-item__input"
 				v-model="filterAddressesModel"
 				:options="filterAddressesOptions"
-				option-label="name"
 				placeholder="Адрес"
 				filter
 				:max-selected-labels="2"
@@ -59,7 +78,6 @@ const priceOptions = ["Платно", "Бесплатно"]
 				class="filter-item__input"
 				v-model="filterTeachersModel"
 				:options="filterTeachersOptions"
-				option-label="name"
 				placeholder="Преподаватель"
 				filter
 				:max-selected-labels="1"
@@ -68,20 +86,24 @@ const priceOptions = ["Платно", "Бесплатно"]
 			/>
 		</li>
 		<li>
-			<input
-				type="text"
-				placeholder="Возраст (введите числом)"
-				size="22"
-				class="filter-item__input base-input"
-				v-model.lazy.number="filterAgeModel"
+			<MultiSelect
+				class="filter-item__input"
+				v-model="filterAgesModel"
+				:options="ageOptions"
+				placeholder="Класс"
+				:max-selected-labels="11"
+				selectedItemsLabel="Выбрано {0} элементов"
+				@focus="checkMultiSelectItems"
 			/>
 		</li>
 		<li>
 			<Select
 				show-clear
 				class="filter-item__input"
-				v-model="filterPriceModel"
-				:options="priceOptions"
+				v-model="filterIsPaidModel"
+				:options="isPaidOptions"
+				option-label="displayValue"
+				option-value="programValue"
 				placeholder="Цена"
 			/>
 		</li>
@@ -90,8 +112,9 @@ const priceOptions = ["Платно", "Бесплатно"]
 				class="filter-item__input"
 				v-model="filterWeekdaysModel"
 				:options="weekdaysOptions"
+				option-label="displayValue"
+				option-value="programValue"
 				placeholder="Дни недели"
-				:max-selected-labels="3"
 				selected-items-label="Выбрано {0} элементов"
 			/>
 		</li>

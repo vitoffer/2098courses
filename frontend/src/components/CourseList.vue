@@ -119,6 +119,7 @@ function showCoursePreview(courseId: string) {
 			/>
 		</Dialog>
 		<li
+			class="courses-list__item"
 			v-for="course in filteredCourseList"
 			:key="course.id"
 		>
@@ -139,6 +140,11 @@ function showCoursePreview(courseId: string) {
 	justify-content: center;
 	gap: 16px;
 	padding: 0 16px 16px;
+
+	&__item {
+		display: flex;
+		align-items: stretch;
+	}
 }
 </style>
 

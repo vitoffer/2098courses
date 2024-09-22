@@ -200,7 +200,7 @@ const formattedSchedule = getFormattedSchedule(props.course.schedule)
 				align-items: center;
 				justify-content: center;
 				gap: 24px;
-				margin-top: 8px;
+				margin-top: auto;
 
 				.button {
 					padding: 4px 8px;
