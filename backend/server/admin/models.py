@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
 class DeleteTables(BaseModel):
@@ -15,14 +16,15 @@ class CourseType(BaseModel):
     teacher: str
     for_ages: str
     name: str
-    description: str
-    orientation: str
+    description: Optional[str] = None
+    orientation: Optional[str] = None
+    url: Optional[str] = None
 
 
 class ScheduleType(BaseModel):
-    monday: str | None
-    tuesday: str | None
-    wednesday: str | None
-    thursday: str | None
-    friday: str | None
-    saturday: str | None
+    monday: Optional[str] = None
+    tuesday: Optional[str] = None
+    wednesday: Optional[str] = None
+    thursday: Optional[str] = None
+    friday: Optional[str] = None
+    saturday: Optional[str] = None
