@@ -1,27 +1,50 @@
-import { createRouter, createWebHistory } from "vue-router"
+import {
+	createRouter,
+	createWebHistory,
+	type NavigationGuardNext,
+} from "vue-router"
 import MainView from "@/views/MainView.vue"
 import LoginView from "@/views/LoginView.vue"
 import AdminView from "@/views/AdminView.vue"
 
-const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'main',
-      component: MainView
-    },
+async function guard(next: NavigationGuardNext) {
+	const response = await fetch(
+		`${import.meta.env.VITE_BASE_API_URL}/admin/get_tables`,
 		{
-			path: '/admin',
-			name: 'admin',
-			component: AdminView,
+			headers: {
+				Authorization: `Bearer ${localStorage.authToken ?? ""}`,
+			},
+		},
+	)
+	if (response.ok) {
+		next()
+		return
+	}
+	next({ name: "login" })
+}
+
+const router = createRouter({
+	history: createWebHistory(import.meta.env.BASE_URL),
+	routes: [
+		{
+			path: "/",
+			name: "main",
+			component: MainView,
 		},
 		{
-			path: '/admin/login',
-			name: 'login',
+			path: "/admin",
+			name: "admin",
+			component: AdminView,
+			async beforeEnter(to, from, next) {
+				await guard(next)
+			},
+		},
+		{
+			path: "/login",
+			name: "login",
 			component: LoginView,
-		}
-  ]
+		},
+	],
 })
 
 export default router
