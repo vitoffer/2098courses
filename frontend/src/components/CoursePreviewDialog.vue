@@ -14,15 +14,23 @@ const formattedSchedule = computed(() =>
 
 <template>
 	<section class="dialog">
-		<p class="focus">{{ course?.focus }}</p>
-		<p>{{ course?.description }}</p>
+		<p
+			class="focus"
+			v-if="course?.orientation"
+		>
+			{{ course?.orientation }} направленность
+		</p>
+		<p v-if="course?.description">{{ course?.description }}</p>
 		<p>{{ course?.address }}</p>
 		<p>{{ course?.teacher }}</p>
-		<p>{{ course?.age.join(", ") }}</p>
-		<p>{{ formattedSchedule }}</p>
-		<p>{{ course?.price }}</p>
+		<p>{{ course?.forAges }}</p>
+		<p>
+			{{ formattedSchedule }}
+		</p>
+		<p>{{ course?.isPaid ? "Платно" : "Бесплатно" }}</p>
 		<a
-			:href="course?.link"
+			v-if="course?.url"
+			:href="course?.url"
 			target="_blank"
 			class="button--course-signup button"
 		>

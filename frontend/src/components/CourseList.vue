@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, toRefs, type Ref } from "vue"
+import { onMounted, ref, toRefs, watchEffect, type Ref } from "vue"
 import { useConfirm } from "primevue/useconfirm"
 import ConfirmDialog from "primevue/confirmdialog"
 import CourseCard from "@/components/CourseCard.vue"
@@ -10,6 +10,7 @@ import { useEditCourseDialogStore } from "@/stores/editCourseDialog"
 import CourseEditDialog from "./CourseEditDialog.vue"
 import CoursePreviewDialog from "./CoursePreviewDialog.vue"
 import { useRoute } from "vue-router"
+import type { ICourse, ISchedule } from "@/types"
 
 const { courseList, filteredCourseList } = toRefs(useCourseListStore())
 
@@ -17,13 +18,14 @@ const confirm = useConfirm()
 
 const route = useRoute()
 
-const selectedCourseId: Ref<string | null> = ref(null)
+const selectedCourseId: Ref<number | null> = ref(null)
 
 const { editingCourse } = useEditCourse(selectedCourseId)
+
 const { isEditCourseDialogVisible } = toRefs(useEditCourseDialogStore())
 
 const isCoursePreviewDialogVisible = ref(false)
-const coursePreviewId = ref<null | string>(null)
+const coursePreviewId = ref<null | number>(null)
 
 onMounted(async () => {
 	const fetchedCourseList = await getFetchedCourseList()
@@ -32,20 +34,42 @@ onMounted(async () => {
 
 async function getFetchedCourseList() {
 	const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/courses`)
+
 	const data = await response.json()
 
-	return data
+	interface ITempCourse {
+		id: string
+		is_paid: boolean
+		address: string
+		teacher: string
+		for_ages: string
+		name: string
+		schedule: ISchedule
+		orientation: string
+		description: string
+		link?: string
+	}
+
+	const camelizedData: ICourse[] = data.map((item: ITempCourse) => {
+		return Object.keys(item).reduce((acc, key) => {
+			const camelizedKey = key.replace(/_([a-z])/g, (match, group) =>
+				group.toUpperCase(),
+			)
+			acc[camelizedKey] = item[key]
+			return acc
+		}, {})
+	})
+
+	return camelizedData
 }
 
-function showEditCourseDialog(selectedId: string) {
+function showEditCourseDialog(selectedId: number) {
 	selectedCourseId.value = selectedId
 
 	isEditCourseDialogVisible.value = true
 }
 
-function confirmDeletion(courseId: string) {
-	console.log(courseId)
-
+function confirmDeletion(courseId: number) {
 	confirm.require({
 		message: "Вы уверены, что хотите удалить этот кружок?",
 		header: "Подтверждение",
@@ -56,43 +80,56 @@ function confirmDeletion(courseId: string) {
 		acceptProps: {
 			label: "Удалить",
 		},
-		accept: () => {
-			courseList.value = courseList.value.filter(
-				(course) => course.id !== courseId,
-			)
-		},
+		accept: () => deleteCourse(courseId),
 	})
 }
 
-function showCoursePreview(courseId: string) {
+async function deleteCourse(courseId) {
+	const response = await fetch(
+		`${import.meta.env.VITE_BASE_API_URL}/admin/delete_course/${courseId}`,
+		{
+			method: "DELETE",
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+			},
+		},
+	)
+
+	const data = await response.json()
+
+	console.log(data.Result)
+}
+
+function showCoursePreview(courseId: number) {
 	isCoursePreviewDialogVisible.value = true
 	coursePreviewId.value = courseId
 }
 </script>
 
 <template>
+	<ConfirmDialog />
+	<Dialog
+		v-if="route.fullPath.includes('admin')"
+		append-to="#adminView"
+		v-model:visible="isEditCourseDialogVisible"
+		modal
+		:header="selectedCourseId ? 'Редактирование кружка' : 'Добавление кружка'"
+		@after-hide="selectedCourseId = null"
+	>
+		<CourseEditDialog v-model="editingCourse" />
+	</Dialog>
+	<Dialog
+		v-model:visible="isCoursePreviewDialogVisible"
+		modal
+		:header="courseList.find((course) => course.id === coursePreviewId)?.name"
+	>
+		<CoursePreviewDialog
+			:course="courseList.find((course) => course.id === coursePreviewId)"
+		/>
+	</Dialog>
 	<ul class="courses-list">
-		<ConfirmDialog />
-		<Dialog
-			v-if="route.fullPath.includes('admin')"
-			append-to="#adminView"
-			v-model:visible="isEditCourseDialogVisible"
-			modal
-			:header="selectedCourseId ? 'Редактирование кружка' : 'Добавление кружка'"
-			@after-hide="selectedCourseId = null"
-		>
-			<CourseEditDialog v-model="editingCourse" />
-		</Dialog>
-		<Dialog
-			v-model:visible="isCoursePreviewDialogVisible"
-			modal
-			:header="courseList.find((course) => course.id === coursePreviewId)?.name"
-		>
-			<CoursePreviewDialog
-				:course="courseList.find((course) => course.id === coursePreviewId)"
-			/>
-		</Dialog>
 		<li
+			class="courses-list__item"
 			v-for="course in filteredCourseList"
 			:key="course.id"
 		>
@@ -108,11 +145,16 @@ function showCoursePreview(courseId: string) {
 
 <style scoped lang="scss">
 .courses-list {
-	display: flex;
-	flex-wrap: wrap;
+	display: grid;
 	justify-content: center;
+	grid-template-columns: repeat(4, min(100%, 320px));
 	gap: 16px;
 	padding: 0 16px 16px;
+
+	&__item {
+		display: flex;
+		align-items: stretch;
+	}
 }
 </style>
 
@@ -142,7 +184,8 @@ function showCoursePreview(courseId: string) {
 }
 
 .p-dialog {
-	width: 80vw !important;
+	width: max-content !important;
+	max-width: 80vw !important;
 
 	@media (max-width: 767px) {
 		width: 100% !important;

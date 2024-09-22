@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { useEditCourseDialogStore } from "@/stores/editCourseDialog"
 import { useFilterModelsStore } from "@/stores/filterModels"
-import { toRefs } from "vue"
+import { ref, toRefs } from "vue"
 import { useRoute } from "vue-router"
+import FileUpload, { type FileUploadUploaderEvent } from "primevue/fileupload"
 
 defineProps<{
 	isFiltersSectionVisible?: boolean
@@ -15,6 +16,47 @@ const route = useRoute()
 const { searchText: searchTextModel } = toRefs(useFilterModelsStore())
 
 const { isEditCourseDialogVisible } = toRefs(useEditCourseDialogStore())
+
+async function uploadTable(event: FileUploadUploaderEvent) {
+	const fileUploadUrl = `${import.meta.env.VITE_BASE_API_URL}/admin/upload_table`
+
+	console.log(event)
+
+	const formData = new FormData()
+	formData.append("table", event.files[0])
+
+	const response = await fetch(fileUploadUrl, {
+		headers: {
+			Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+		},
+		method: "POST",
+		body: formData,
+	})
+
+	const { filename } = await response.json()
+
+	pushTable(filename)
+}
+
+async function pushTable(tableName: string) {
+	const tablePushUrl = `${import.meta.env.VITE_BASE_API_URL}/admin/add_data_to_base`
+
+	const response = await fetch(tablePushUrl, {
+		headers: {
+			Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+			"Content-Type": "application/json",
+		},
+		method: "POST",
+
+		body: JSON.stringify({
+			tables_names: [tableName],
+		}),
+	})
+
+	const data = await response.json()
+
+	console.log(data.Result)
+}
 </script>
 
 <template>
@@ -32,13 +74,23 @@ const { isEditCourseDialogVisible } = toRefs(useEditCourseDialogStore())
 			class="search-bar base-input"
 			v-model="searchTextModel"
 		/>
-		<button
-			v-if="route.fullPath.includes('admin')"
-			class="add-course__button"
-			@click="isEditCourseDialogVisible = true"
-		>
-			<i class="pi pi-plus-circle"></i>
-		</button>
+		<template v-if="route.fullPath.includes('admin')">
+			<button
+				class="add-course__button"
+				@click="isEditCourseDialogVisible = true"
+			>
+				<i class="pi pi-plus-circle"></i>
+			</button>
+			<FileUpload
+				mode="basic"
+				name="table"
+				accept=".docx,.doc"
+				auto
+				custom-upload
+				@uploader="uploadTable"
+				choose-label="Загрузить таблицу"
+			/>
+		</template>
 	</section>
 </template>
 
@@ -96,6 +148,15 @@ const { isEditCourseDialogVisible } = toRefs(useEditCourseDialogStore())
 	.pi {
 		font-size: 1.5rem;
 		color: var(--text-white);
+	}
+}
+
+:deep(.p-fileupload-choose-button) {
+	background-color: var(--blue-primary) !important;
+	border: none !important;
+
+	* {
+		color: var(--text-white) !important;
 	}
 }
 </style>

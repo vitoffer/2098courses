@@ -17,38 +17,80 @@ const formattedSchedule = getFormattedSchedule(props.course.schedule)
 </script>
 
 <template>
-	<article class="course-card card">
+	<article
+		class="course-card card"
+		:style="{
+			paddingBottom:
+				route.fullPath.includes('admin') && !course.url
+					? '32px !important'
+					: '',
+		}"
+	>
 		<h3 class="card__name">{{ course.name }}</h3>
-		<p class="card__focus">{{ course.focus }}</p>
-		<p class="card__description">{{ course.description }}</p>
+		<p
+			v-if="course.orientation"
+			class="card__focus"
+		>
+			{{ course.orientation }} направленность
+		</p>
+		<p
+			v-if="course.description"
+			class="card__description"
+		>
+			{{ course.description }}
+		</p>
 		<hr class="card__divider" />
-		<div class="card__group">
+		<div
+			class="card__group"
+			v-if="course.address"
+		>
 			<i class="pi pi-map-marker" />
 			<span class="card__address">{{ course.address }}</span>
 		</div>
-		<div class="card__group">
+		<div
+			class="card__group"
+			v-if="course.teacher"
+		>
 			<i class="pi pi-user" />
 			<span class="card__teacher">{{ course.teacher }}</span>
 		</div>
-		<div class="card__group">
+		<div
+			class="card__group"
+			v-if="course.forAges"
+		>
 			<i class="pi pi-star" />
-			<span class="card__age">{{ course.age?.join(", ") }}</span>
+			<span class="card__age">{{ course.forAges }}</span>
 		</div>
-		<div class="card__group">
+		<div
+			class="card__group"
+			v-if="formattedSchedule"
+		>
 			<i class="pi pi-calendar" />
-			<span class="card__schedule">{{ formattedSchedule }}</span>
+			<span class="card__schedule">
+				{{ formattedSchedule }}
+			</span>
 		</div>
 		<div class="card__group card__group--price">
 			<i class="pi pi-tag" />
-			<span class="card__price">{{ course.price }}</span>
+			<span class="card__price">
+				{{ course.isPaid ? "Платно" : "Бесплатно" }}
+			</span>
 		</div>
 		<a
-			v-if="route.fullPath.includes('admin')"
-			:href="course.link"
+			v-if="course.url && route.fullPath.includes('admin')"
+			:href="course.url"
 			class="card__group card__group--link"
+			target="_blank"
 		>
 			<i class="pi pi-at" />
-			<span class="card__link">{{ course.link.slice(8) }}</span>
+			<span class="card__link">
+				{{
+					course.url.slice(
+						(course.url.indexOf("mos.ru") || 0) + 7,
+						(course.url.indexOf("mos.ru") || 0) + 7 + 8,
+					)
+				}}
+			</span>
 		</a>
 		<div
 			v-if="!route.fullPath.includes('admin')"
@@ -61,7 +103,8 @@ const formattedSchedule = getFormattedSchedule(props.course.schedule)
 				Подробнее
 			</button>
 			<a
-				:href="course.link"
+				v-if="course.url"
+				:href="course.url"
 				target="_blank"
 				class="button--course-signup button"
 			>
@@ -94,8 +137,11 @@ const formattedSchedule = getFormattedSchedule(props.course.schedule)
 	display: flex;
 	flex-direction: column;
 	gap: 4px;
+	width: 100%;
+	height: 100%;
 	max-width: 320px;
-	padding: 8px 12px 12px;
+	min-height: 250px;
+	padding: 12px 12px 12px;
 	border-radius: 10px;
 	box-shadow: 0 0 8px 0 rgba(0 0 0 / 0.2);
 
@@ -177,7 +223,7 @@ const formattedSchedule = getFormattedSchedule(props.course.schedule)
 				align-items: center;
 				justify-content: center;
 				gap: 24px;
-				margin-top: 8px;
+				margin-top: auto;
 
 				.button {
 					padding: 4px 8px;

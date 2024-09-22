@@ -12,12 +12,35 @@ export async function checkMultiSelectItems() {
 }
 
 export function getFormattedSchedule(schedule: ISchedule) {
+	const weekdayAlign = {
+		monday: "Пн",
+		tuesday: "Вт",
+		wednesday: "Ср",
+		thursday: "Чт",
+		friday: "Пт",
+		saturday: "Сб",
+	}
+
+	const weekdayOrder = Object.keys(weekdayAlign).sort((a, b) => {
+		const order = [
+			"monday",
+			"tuesday",
+			"wednesday",
+			"thursday",
+			"friday",
+			"saturday",
+		]
+		return order.indexOf(a) - order.indexOf(b)
+	})
+
 	const formattedScheduleArray: string[] = []
 
-	Object.entries(schedule ?? {}).forEach(([weekday, timeArray]) => {
-		formattedScheduleArray.push(
-			`${weekday as TWeekday}: ${(timeArray as string[]).join(", ")}`,
-		)
+	weekdayOrder.forEach((key) => {
+		if (schedule[key]) {
+			formattedScheduleArray.push(
+				`${weekdayAlign[key] as TWeekday}: ${schedule[key]}`,
+			)
+		}
 	})
 
 	return formattedScheduleArray.join(", ")

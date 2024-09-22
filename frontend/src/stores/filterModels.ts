@@ -1,28 +1,26 @@
-import { reactive } from 'vue'
-import { defineStore } from 'pinia'
-import type { IFilterAddress, IFilterFocus, IFilterTeacher, TFilterAge, TFilterPrice, TFilterTime,  TWeekday } from "@/types"
+import { reactive } from "vue"
+import { defineStore } from "pinia"
 
-export const useFilterModelsStore = defineStore('filterModels', () => {
-
+export const useFilterModelsStore = defineStore("filterModels", () => {
 	const models = reactive<{
-		searchText: string
-		selectedFocuses: IFilterFocus[]
-		selectedAddresses: IFilterAddress[]
-		selectedTeachers: IFilterTeacher[]
-		selectedAge: TFilterAge
-		selectedPrice: TFilterPrice
-		selectedWeekdays: TWeekday[]
-		selectedTime: TFilterTime
+		searchText
+		selectedOrientations
+		selectedAddresses
+		selectedTeachers
+		selectedAges
+		selectedIsPaid
+		selectedWeekdays
+		selectedTime
 	}>({
-		searchText: '',
-		selectedFocuses: [],
+		searchText: "",
+		selectedOrientations: [],
 		selectedAddresses: [],
 		selectedTeachers: [],
-		selectedAge: null,
-		selectedPrice: null,
+		selectedAges: [],
+		selectedIsPaid: null,
 		selectedWeekdays: [],
 		selectedTime: null,
 	})
 
-  return models
+	return models
 })

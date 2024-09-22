@@ -1,43 +1,38 @@
 export interface ICourse {
-	id: string
-	name: string
-	focus: string
-	description: string
+	id: number
+	isPaid: boolean
 	address: string
 	teacher: string
-	age: number[]
+	forAges: string
+	name: string
 	schedule: ISchedule
-	price: string
-	link: string
+	orientation: string
+	description: string
+	url?: string
 }
-
-export type TWeekday = "Пн" | "Вт" | "Ср" | "Чт" | "Пт" | "Сб" | "Вс"
-
-export interface IFilterFocus {
-	name: string
-}
-export interface IFilterAddress {
-	name: string
-}
-export interface IFilterTeacher {
-	name: string
-}
-export type TFilterAge = number | null
-export type TFilterPrice = "Платно" | "Бесплатно" | null
-export type TFilterTime = string | null
-
-export type TFilterOption =
-	| {
-			name: string
-	  }
-	| string
 
 export interface ISchedule {
-	Пн?: string[]
-	Вт?: string[]
-	Ср?: string[]
-	Чт?: string[]
-	Пт?: string[]
-	Сб?: string[]
-	Вс?: string[]
+	monday?: string[]
+	tuesday?: string[]
+	wednesday?: string[]
+	thursday?: string[]
+	friday?: string[]
+	saturday?: string[]
 }
+
+export type TWeekday = "Пн" | "Вт" | "Ср" | "Чт" | "Пт" | "Сб"
+
+export type TFilterSearch = string | null
+export type TFilterOrientation = string | null
+export type TFilterAddress = string | null
+export type TFilterTeacher = string | null
+export type TFilterAge = number | null
+export type TFilterIsPaid = boolean | null
+export type TFilterWeekday =
+	| "monday"
+	| "tuesday"
+	| "wednesday"
+	| "thursday"
+	| "friday"
+	| "saturday"
+export type TFilterTime = string | null
