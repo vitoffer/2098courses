@@ -29,8 +29,8 @@ const formattedSchedule = computed(() =>
 		</p>
 		<p>{{ course?.isPaid ? "Платно" : "Бесплатно" }}</p>
 		<a
-			v-if="course?.link"
-			:href="course?.link"
+			v-if="course?.url"
+			:href="course?.url"
 			target="_blank"
 			class="button--course-signup button"
 		>

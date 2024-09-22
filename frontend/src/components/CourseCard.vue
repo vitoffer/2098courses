@@ -21,7 +21,7 @@ const formattedSchedule = getFormattedSchedule(props.course.schedule)
 		class="course-card card"
 		:style="{
 			paddingBottom:
-				route.fullPath.includes('admin') && !course.link
+				route.fullPath.includes('admin') && !course.url
 					? '32px !important'
 					: '',
 		}"
@@ -77,12 +77,20 @@ const formattedSchedule = getFormattedSchedule(props.course.schedule)
 			</span>
 		</div>
 		<a
-			v-if="course.link && route.fullPath.includes('admin')"
-			:href="course.link"
+			v-if="course.url && route.fullPath.includes('admin')"
+			:href="course.url"
 			class="card__group card__group--link"
+			target="_blank"
 		>
 			<i class="pi pi-at" />
-			<span class="card__link">{{ course.link.slice(8) }}</span>
+			<span class="card__link">
+				{{
+					course.url.slice(
+						(course.url.indexOf("mos.ru") || 0) + 7,
+						(course.url.indexOf("mos.ru") || 0) + 7 + 8,
+					)
+				}}
+			</span>
 		</a>
 		<div
 			v-if="!route.fullPath.includes('admin')"
@@ -95,8 +103,8 @@ const formattedSchedule = getFormattedSchedule(props.course.schedule)
 				Подробнее
 			</button>
 			<a
-				v-if="course.link"
-				:href="course.link"
+				v-if="course.url"
+				:href="course.url"
 				target="_blank"
 				class="button--course-signup button"
 			>

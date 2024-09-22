@@ -60,6 +60,8 @@ async function getFetchedCourseList() {
 		}, {})
 	})
 
+	console.log(camelizedData)
+
 	return camelizedData
 }
 

@@ -38,6 +38,7 @@ function saveCourse() {
 			name: courseModel.value?.name || "",
 			description: courseModel.value?.description || "",
 			orientation: courseModel.value?.orientation || "",
+			url: courseModel.value?.url || null,
 		},
 		schedule: scheduleModel.value,
 	}
@@ -234,7 +235,7 @@ const searchTeacher = (event: AutoCompleteCompleteEvent) => {
 			type="text"
 			class="base-input"
 			placeholder="Ссылка на mos.ru"
-			v-model="courseModel!.link"
+			v-model="courseModel!.url"
 		/>
 		<div class="buttons">
 			<button

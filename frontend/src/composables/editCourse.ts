@@ -36,7 +36,7 @@ export function useEditCourse(selectedCourseId: Ref<number | null>) {
 						friday: "",
 						saturday: "",
 					},
-					link: "",
+					url: "",
 				})
 	})
 

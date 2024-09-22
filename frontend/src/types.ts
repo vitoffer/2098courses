@@ -8,7 +8,7 @@ export interface ICourse {
 	schedule: ISchedule
 	orientation: string
 	description: string
-	link?: string
+	url?: string
 }
 
 export interface ISchedule {
