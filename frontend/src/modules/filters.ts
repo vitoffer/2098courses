@@ -102,6 +102,7 @@ function isCourseFitDateTime(
 export function isCourseFitTime(course: ICourse, time: string) {
 	return Object.values(course.schedule).some((fullTimeString) => {
 		if (!fullTimeString || typeof fullTimeString == "number") return
+
 		return fullTimeString.includes(time)
 	})
 }
