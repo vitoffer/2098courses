@@ -105,7 +105,6 @@ const scheduleModel = ref(
 		/>
 		<div class="buttons">
 			<button class="button button--green">Сохранить</button>
-			<button class="button button--blue">Загрузить таблицу</button>
 		</div>
 	</section>
 </template>

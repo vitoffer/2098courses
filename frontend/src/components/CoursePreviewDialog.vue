@@ -23,7 +23,7 @@ const formattedSchedule = computed(() =>
 		<p v-if="course?.description">{{ course?.description }}</p>
 		<p>{{ course?.address }}</p>
 		<p>{{ course?.teacher }}</p>
-		<p>{{ course?.forAges }} класс</p>
+		<p>{{ course?.forAges }}</p>
 		<p>
 			{{ formattedSchedule }}
 		</p>

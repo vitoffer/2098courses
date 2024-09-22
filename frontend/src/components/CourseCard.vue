@@ -50,7 +50,7 @@ const formattedSchedule = getFormattedSchedule(props.course.schedule)
 		</div>
 		<div class="card__group">
 			<i class="pi pi-star" />
-			<span class="card__age">{{ course.forAges }} класс</span>
+			<span class="card__age">{{ course.forAges }}</span>
 		</div>
 		<div class="card__group">
 			<i class="pi pi-calendar" />
