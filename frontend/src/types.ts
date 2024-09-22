@@ -1,5 +1,5 @@
 export interface ICourse {
-	id: string
+	id: number
 	isPaid: boolean
 	address: string
 	teacher: string

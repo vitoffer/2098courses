@@ -9,7 +9,7 @@ import {
 	type Ref,
 } from "vue"
 
-export function useEditCourse(selectedCourseId: Ref<string | null>) {
+export function useEditCourse(selectedCourseId: Ref<number | null>) {
 	const { courseList } = toRefs(useCourseListStore())
 
 	const editingCourse: ComputedRef<ICourse> = computed(() => {
@@ -20,7 +20,7 @@ export function useEditCourse(selectedCourseId: Ref<string | null>) {
 					) as ICourse),
 				})
 			: reactive({
-					id: "new",
+					id: -1,
 					name: "",
 					orientation: "",
 					description: "",

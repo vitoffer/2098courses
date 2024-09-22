@@ -55,7 +55,7 @@ async function pushTable(tableName: string) {
 
 	const data = await response.json()
 
-	console.log(data.result)
+	console.log(data.Result)
 }
 </script>
 

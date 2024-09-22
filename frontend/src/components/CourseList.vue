@@ -18,14 +18,14 @@ const confirm = useConfirm()
 
 const route = useRoute()
 
-const selectedCourseId: Ref<string | null> = ref(null)
+const selectedCourseId: Ref<number | null> = ref(null)
 
 const { editingCourse } = useEditCourse(selectedCourseId)
 
 const { isEditCourseDialogVisible } = toRefs(useEditCourseDialogStore())
 
 const isCoursePreviewDialogVisible = ref(false)
-const coursePreviewId = ref<null | string>(null)
+const coursePreviewId = ref<null | number>(null)
 
 onMounted(async () => {
 	const fetchedCourseList = await getFetchedCourseList()
@@ -63,15 +63,13 @@ async function getFetchedCourseList() {
 	return camelizedData
 }
 
-function showEditCourseDialog(selectedId: string) {
+function showEditCourseDialog(selectedId: number) {
 	selectedCourseId.value = selectedId
 
 	isEditCourseDialogVisible.value = true
 }
 
-function confirmDeletion(courseId: string) {
-	console.log(courseId)
-
+function confirmDeletion(courseId: number) {
 	confirm.require({
 		message: "Вы уверены, что хотите удалить этот кружок?",
 		header: "Подтверждение",
@@ -82,15 +80,27 @@ function confirmDeletion(courseId: string) {
 		acceptProps: {
 			label: "Удалить",
 		},
-		accept: () => {
-			courseList.value = courseList.value.filter(
-				(course) => course.id !== courseId,
-			)
-		},
+		accept: () => deleteCourse(courseId),
 	})
 }
 
-function showCoursePreview(courseId: string) {
+async function deleteCourse(courseId) {
+	const response = await fetch(
+		`${import.meta.env.VITE_BASE_API_URL}/admin/delete_course/${courseId}`,
+		{
+			method: "DELETE",
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+			},
+		},
+	)
+
+	const data = await response.json()
+
+	console.log(data.Result)
+}
+
+function showCoursePreview(courseId: number) {
 	isCoursePreviewDialogVisible.value = true
 	coursePreviewId.value = courseId
 }

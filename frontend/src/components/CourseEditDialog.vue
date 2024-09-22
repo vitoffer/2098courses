@@ -7,7 +7,7 @@ import Select from "primevue/select"
 import Textarea from "primevue/textarea"
 import { ref, toRefs, watchEffect } from "vue"
 
-const courseModel = defineModel()
+const courseModel = defineModel<ICourse>()
 
 const {
 	orientations: filterOrientationsOptions,
@@ -41,6 +41,63 @@ const scheduleModel = ref(
 		})
 		.join("; "),
 )
+
+function scheduleModelToObject() {
+	return scheduleModel.value.split(";").reduce((acc, part) => {
+		const [day, time] = part.trim().split(":")
+		const weekday = {
+			Пн: "monday",
+			Вт: "tuesday",
+			Ср: "wednesday",
+			Чт: "thursday",
+			Пт: "friday",
+			Сб: "saturday",
+		}[day.trim()]
+		acc[weekday] = time.trim()
+		return acc
+	}, {})
+}
+
+function saveCourse() {
+	if (courseModel.value.id === -1) {
+		addCourse()
+		return
+	}
+	editCourse()
+}
+
+async function addCourse() {
+	const body = {
+		course: {
+			is_paid: courseModel.value?.isPaid,
+			address: courseModel.value?.address,
+			teacher: courseModel.value?.teacher,
+			for_ages: courseModel.value?.forAges,
+			name: courseModel.value?.name,
+			description: courseModel.value?.description,
+			orientation: courseModel.value?.orientation,
+		},
+		schedule: scheduleModelToObject(),
+	}
+
+	const response = await fetch(
+		`${import.meta.env.VITE_BASE_API_URL}/admin/add_course`,
+		{
+			method: "POST",
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(body),
+		},
+	)
+
+	const data = await response.json()
+
+	console.log(data.Result)
+}
+
+async function editCourse() {}
 </script>
 
 <template>
@@ -104,7 +161,12 @@ const scheduleModel = ref(
 			v-model="courseModel!.link"
 		/>
 		<div class="buttons">
-			<button class="button button--green">Сохранить</button>
+			<button
+				class="button button--green"
+				@click="saveCourse"
+			>
+				Сохранить
+			</button>
 		</div>
 	</section>
 </template>
