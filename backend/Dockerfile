@@ -9,4 +9,6 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
 COPY ./server /code/server
 
-CMD ["python", "server/manage.py", "-r"]
+WORKDIR /code/server/
+
+CMD ["mkdir", "cache/", "&&", "python", "manage.py", "-r"]

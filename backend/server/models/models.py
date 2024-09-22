@@ -10,6 +10,7 @@ class Course(SQLModel, table=True):
     name: str
     orientation: str | None
     description: str | None
+    url: str | None
     schedule_id: int | None = Field(default=None, foreign_key='schedule.id')
     schedule: 'Schedule' = Relationship(back_populates='course')
 

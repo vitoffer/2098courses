@@ -58,7 +58,7 @@ def convert_to_models(args):
         return None, None
     text = [cell.text for cell in row.cells[:4]]
     days = [cell.text for cell in row.cells[4:]]
-    text.extend((address, is_paid, ''))
+    text.extend((address, is_paid, None, None))
     return {KEYS[_]: text[_] for _ in range(len(KEYS))}, {
         DAYS[_]: days[_] for _ in range(len(DAYS)) if days[_] != ''
     }
