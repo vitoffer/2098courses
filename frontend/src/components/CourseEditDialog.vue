@@ -5,17 +5,42 @@ import AutoComplete from "primevue/autocomplete"
 import MultiSelect from "primevue/multiselect"
 import Select from "primevue/select"
 import Textarea from "primevue/textarea"
-import { ref } from "vue"
+import { ref, toRefs, watchEffect } from "vue"
 
 const courseModel = defineModel()
 
-// const {
-// 	orientations: filterOrientationsOptions,
-// 	addresses: filterAddressesOptions,
-// 	teachers: filterTeachersOptions,
-// } = toRefs(useFilterOptionsStore())
+const {
+	orientations: filterOrientationsOptions,
+	addresses: filterAddressesOptions,
+	teachers: filterTeachersOptions,
+} = toRefs(useFilterOptionsStore())
 
-const scheduleModel = ref("")
+const weekdaysOrder = {
+	monday: 1,
+	tuesday: 2,
+	wednesday: 3,
+	thursday: 4,
+	friday: 5,
+	saturday: 6,
+}
+
+const scheduleModel = ref(
+	Object.keys(courseModel.value.schedule)
+		.filter((key) => key !== "id")
+		.sort((a, b) => weekdaysOrder[a] - weekdaysOrder[b])
+		.map((key) => {
+			const weekday = {
+				monday: "Пн",
+				tuesday: "Вт",
+				wednesday: "Ср",
+				thursday: "Чт",
+				friday: "Пт",
+				saturday: "Сб",
+			}[key]
+			return `${weekday}: ${courseModel.value.schedule[key]}`
+		})
+		.join("; "),
+)
 </script>
 
 <template>
@@ -26,12 +51,11 @@ const scheduleModel = ref("")
 			placeholder="Название"
 			v-model="courseModel!.name"
 		/>
-		<!-- <Select
+		<Select
 			placeholder="Направленность"
 			v-model="courseModel!.orientation"
 			:options="filterOrientationsOptions"
-			option-label="name"
-		/> -->
+		/>
 		<Textarea
 			placeholder="Описание"
 			v-model="courseModel!.description"
@@ -40,10 +64,10 @@ const scheduleModel = ref("")
 			rows="10"
 			class="base-input"
 		/>
-		<!-- <AutoComplete
+		<AutoComplete
 			placeholder="Адрес"
 			:suggestions="filterAddressesOptions"
-			v-model="courseModel!.address"
+			v-model="courseModel.address"
 			pt:pc-input="base-input"
 		/>
 		<AutoComplete
@@ -51,22 +75,17 @@ const scheduleModel = ref("")
 			:suggestions="filterTeachersOptions"
 			v-model="courseModel!.teacher"
 			pt:pc-input="base-input"
-		/> -->
-		<!-- <MultiSelect
-			placeholder="Возраст"
-			:options="Array.from({ length: 97 }, (_, i) => i + 3)"
-			v-model="courseModel!.forAges"
-		/> -->
-		<input
-			type="text"
-			class="base-input"
-			placeholder="Возраст в формате '10-11' или '12,13,14'"
-			v-model="courseModel!.forAges"
 		/>
 		<input
 			type="text"
 			class="base-input input-schedule"
-			placeholder='Расписание в формате "Пн: 17:30-18:30, 18:30-19:30; Вт: 19:30-20:00"'
+			placeholder='Класс в формате "10,11" или "10-11"'
+			v-model="courseModel.forAges"
+		/>
+		<input
+			type="text"
+			class="base-input input-schedule"
+			placeholder='Расписание в формате "Пн: 17:30-18:30; Вт: 19:30-20:00"'
 			v-model="scheduleModel"
 		/>
 		<Select
@@ -84,6 +103,10 @@ const scheduleModel = ref("")
 			placeholder="Ссылка на mos.ru"
 			v-model="courseModel!.link"
 		/>
+		<div class="buttons">
+			<button class="button button--green">Сохранить</button>
+			<button class="button button--blue">Загрузить таблицу</button>
+		</div>
 	</section>
 </template>
 
@@ -94,6 +117,29 @@ const scheduleModel = ref("")
 
 :deep(.p-select-label) {
 	color: var(--text-black) !important;
+}
+
+.buttons {
+	display: flex;
+	gap: 16px;
+	align-self: center;
+}
+
+.button {
+	align-self: center;
+	padding: 4px 8px;
+	font-size: 0.875rem;
+	line-height: 1.4;
+	color: var(--text-white);
+	border-radius: 10px;
+
+	&--blue {
+		background-color: var(--blue-primary);
+	}
+
+	&--green {
+		background-color: var(--green-primary);
+	}
 }
 </style>
 
