@@ -35,16 +35,6 @@ const isPaidOptions = [
 	{ programValue: true, displayValue: "Платно" },
 	{ programValue: false, displayValue: "Бесплатно" },
 ]
-
-// watchEffect(() => {
-// 	console.log(filterOrientationsModel.value)
-// 	console.log(filterAddressesModel.value)
-// 	console.log(filterTeachersModel.value)
-// 	console.log(filterAgesModel.value)
-// 	console.log(filterIsPaidModel.value)
-// 	console.log(filterWeekdaysModel.value)
-// 	console.log(filterTimeModel.value)
-// })
 </script>
 
 <template>

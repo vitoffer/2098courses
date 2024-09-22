@@ -18,7 +18,7 @@ export const useFilterOptionsStore = defineStore("filterOptions", () => {
 			`${import.meta.env.VITE_BASE_API_URL}/courses/${type}/`,
 		)
 		const data = await response.json()
-		optionsArray.push(...data)
+		optionsArray.push(...data.filter((option) => option))
 	}
 
 	return {
