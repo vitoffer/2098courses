@@ -28,9 +28,14 @@ def verify_password(plain_password, hash_password) -> bool:
 
 
 def get_user(session: Session, username: str):
-    user = session.exec(select(User).where(User.username == username)).one()
-    if user:
-        return UserTypeInDB(**user.model_dump())
+    try:
+        user = session.exec(
+            select(User).where(User.username == username)
+        ).one()
+        if user:
+            return UserTypeInDB(**user.model_dump())
+    except Exception:
+        return False
 
 
 def authenticate_user(session: Session, username: str, password: str):
@@ -81,6 +86,16 @@ async def get_current_active_user(
     if current_user.disabled:
         raise HTTPException(status_code=400, detail='Inactive user')
     return current_user
+
+
+async def get_current_active_super_user(
+    active_user: Annotated[User, Depends(get_current_active_user)],
+):
+    if not active_user.is_super_user:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail='Access denied'
+        )
+    return active_user
 
 
 @router.post('/token')

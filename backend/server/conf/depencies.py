@@ -1,7 +1,8 @@
 from sqlmodel import Session
-from fastapi import Depends
+from fastapi import Header
 from models.database import create_db_and_tables, engine
 from models.models import *
+from typing import Annotated
 
 from .settings import PWD_CONTEXT
 
@@ -32,10 +33,5 @@ def cerate_su():
     return
 
 
-def super_user(view):
-    def check(*args, **kwargs):
-        print(len(args), len(kwargs))
-        result = view(*args, **kwargs)
-        return result
-
-    return check
+async def check_is_super_user(Authorization: Annotated[str, Header()]):
+    print(Authorization)
