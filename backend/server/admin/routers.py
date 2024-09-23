@@ -11,8 +11,8 @@ from models.database import get_session
 from .models import DeleteTables, UploadTabelToDb, CourseType, ScheduleType
 from conf.settings import BASE_DIR
 from fastapi import APIRouter, UploadFile, Depends, HTTPException, status
-from routers.auth import get_current_active_user, User
-from conf.depencies import super_user
+from routers.auth import get_current_active_super_user, User
+from conf.depencies import check_is_super_user
 
 import bs4
 import requests
@@ -39,7 +39,11 @@ DAYS = [
     'saturday',
 ]
 
-router = APIRouter(prefix='/admin', tags=['admin'])
+router = APIRouter(
+    prefix='/admin',
+    tags=['admin'],
+    # dependencies=[Depends(check_is_super_user)],
+)
 
 
 def is_super_user(user: User):
@@ -89,7 +93,7 @@ def convert_to_models(args):
 @router.post('/upload_table')
 async def upload_table(
     table: UploadFile,
-    current_user: Annotated[User, Depends(get_current_active_user)],
+    current_user: Annotated[User, Depends(get_current_active_super_user)],
 ):
     is_super_user(current_user)
     with open(f'{TABLES_DIR}/{table.filename}', 'wb') as buffer:
@@ -100,7 +104,7 @@ async def upload_table(
 @router.post('/delete_table')
 async def delete_table(
     table_names: DeleteTables,
-    current_user: Annotated[User, Depends(get_current_active_user)],
+    current_user: Annotated[User, Depends(get_current_active_super_user)],
 ):
     is_super_user(current_user)
     map(lambda x: os.remove(f'{TABLES_DIR}/{x}'), table_names.tables_names)
@@ -109,7 +113,7 @@ async def delete_table(
 
 @router.get('/get_tables')
 async def get_tables_names(
-    current_user: Annotated[User, Depends(get_current_active_user)],
+    current_user: Annotated[User, Depends(get_current_active_super_user)],
     session: Session = Depends(get_session),
 ):
     is_super_user(current_user)
@@ -119,7 +123,7 @@ async def get_tables_names(
 @router.post('/add_data_to_base')
 async def add_to_base(
     tables: UploadTabelToDb,
-    current_user: Annotated[User, Depends(get_current_active_user)],
+    current_user: Annotated[User, Depends(get_current_active_super_user)],
     session: Session = Depends(get_session),
 ):
     is_super_user(current_user)
@@ -156,7 +160,7 @@ async def add_to_base(
 async def add_course(
     course: CourseType,
     schedule: ScheduleType,
-    current_user: Annotated[User, Depends(get_current_active_user)],
+    current_user: Annotated[User, Depends(get_current_active_super_user)],
     session: Session = Depends(get_session),
 ):
     is_super_user(current_user)
@@ -175,7 +179,7 @@ async def change_course(
     id: int,
     course: CourseType,
     schedule: ScheduleType,
-    current_user: Annotated[User, Depends(get_current_active_user)],
+    current_user: Annotated[User, Depends(get_current_active_super_user)],
     session: Session = Depends(get_session),
 ):
     is_super_user(current_user)
@@ -190,7 +194,7 @@ async def change_course(
 @router.delete('/delete_course/{id}')
 async def delete_course(
     id: int,
-    current_user: Annotated[User, Depends(get_current_active_user)],
+    current_user: Annotated[User, Depends(get_current_active_super_user)],
     session: Session = Depends(get_session),
 ):
     is_super_user(current_user)
