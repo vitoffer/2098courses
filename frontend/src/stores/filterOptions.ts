@@ -1,5 +1,5 @@
 import { defineStore } from "pinia"
-import { reactive, type Reactive } from "vue"
+import { reactive } from "vue"
 
 export const useFilterOptionsStore = defineStore("filterOptions", () => {
 	const orientationOptions = reactive([])

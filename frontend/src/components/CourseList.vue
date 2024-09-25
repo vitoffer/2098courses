@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, toRefs, watchEffect, type Ref } from "vue"
+import { onMounted, ref, toRefs, type Ref } from "vue"
 import { useConfirm } from "primevue/useconfirm"
 import ConfirmDialog from "primevue/confirmdialog"
 import CourseCard from "@/components/CourseCard.vue"
@@ -110,8 +110,8 @@ function showCoursePreview(courseId: number) {
 	<ConfirmDialog />
 	<Dialog
 		v-if="route.fullPath.includes('admin')"
-		append-to="#adminView"
 		v-model:visible="isEditCourseDialogVisible"
+		append-to="#adminView"
 		modal
 		:header="selectedCourseId ? 'Редактирование кружка' : 'Добавление кружка'"
 		@after-hide="selectedCourseId = null"
@@ -129,9 +129,9 @@ function showCoursePreview(courseId: number) {
 	</Dialog>
 	<ul class="courses-list">
 		<li
-			class="courses-list__item"
 			v-for="course in filteredCourseList"
 			:key="course.id"
+			class="courses-list__item"
 		>
 			<CourseCard
 				:course="course"

@@ -1,4 +1,4 @@
-import type { ICourse, ISchedule, TWeekday } from "@/types"
+import type { ISchedule, TWeekday } from "@/types"
 import { nextTick } from "vue"
 
 export async function checkMultiSelectItems() {

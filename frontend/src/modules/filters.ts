@@ -1,7 +1,6 @@
 import { useFilterModelsStore } from "@/stores/filterModels"
 import type {
 	ICourse,
-	TWeekday,
 	TFilterOrientation,
 	TFilterAddress,
 	TFilterTeacher,

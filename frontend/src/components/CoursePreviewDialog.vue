@@ -15,8 +15,8 @@ const formattedSchedule = computed(() =>
 <template>
 	<section class="dialog">
 		<p
-			class="focus"
 			v-if="course?.orientation"
+			class="focus"
 		>
 			{{ course?.orientation }} направленность
 		</p>

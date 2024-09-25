@@ -5,8 +5,8 @@ import SearchSection from "@/components/sections/SearchSection.vue"
 
 <template>
 	<main
-		class="container"
 		id="adminView"
+		class="container"
 	>
 		<SearchSection />
 		<CoursesSection />

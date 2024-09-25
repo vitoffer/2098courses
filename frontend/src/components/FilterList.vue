@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { toRefs, watchEffect } from "vue"
+import { toRefs } from "vue"
 import MultiSelect from "primevue/multiselect"
 import Select from "primevue/select"
 import { checkMultiSelectItems } from "@/modules/functions"
@@ -41,56 +41,56 @@ const isPaidOptions = [
 	<ul class="filter__list filter-list">
 		<li class="filter-list__item filter-item">
 			<MultiSelect
-				class="filter-item__input"
 				v-model="filterOrientationsModel"
+				class="filter-item__input"
 				:options="filterOrientationsOptions"
 				placeholder="Направленность"
 				filter
 				:max-selected-labels="2"
-				selectedItemsLabel="Выбрано {0} элементов"
+				selected-items-label="Выбрано {0} элементов"
 				@focus="checkMultiSelectItems"
 			/>
 		</li>
 		<li>
 			<MultiSelect
-				class="filter-item__input"
 				v-model="filterAddressesModel"
+				class="filter-item__input"
 				:options="filterAddressesOptions"
 				placeholder="Адрес"
 				filter
 				:max-selected-labels="2"
-				selectedItemsLabel="Выбрано {0} элементов"
+				selected-items-label="Выбрано {0} элементов"
 				@focus="checkMultiSelectItems"
 			/>
 		</li>
 		<li>
 			<MultiSelect
-				class="filter-item__input"
 				v-model="filterTeachersModel"
+				class="filter-item__input"
 				:options="filterTeachersOptions"
 				placeholder="Преподаватель"
 				filter
 				:max-selected-labels="1"
-				selectedItemsLabel="Выбрано {0} элементов"
+				selected-items-label="Выбрано {0} элементов"
 				@focus="checkMultiSelectItems"
 			/>
 		</li>
 		<li>
 			<MultiSelect
-				class="filter-item__input"
 				v-model="filterAgesModel"
+				class="filter-item__input"
 				:options="ageOptions"
 				placeholder="Класс"
 				:max-selected-labels="11"
-				selectedItemsLabel="Выбрано {0} элементов"
+				selected-items-label="Выбрано {0} элементов"
 				@focus="checkMultiSelectItems"
 			/>
 		</li>
 		<li>
 			<Select
+				v-model="filterIsPaidModel"
 				show-clear
 				class="filter-item__input"
-				v-model="filterIsPaidModel"
 				:options="isPaidOptions"
 				option-label="displayValue"
 				option-value="programValue"
@@ -99,8 +99,8 @@ const isPaidOptions = [
 		</li>
 		<li>
 			<MultiSelect
-				class="filter-item__input"
 				v-model="filterWeekdaysModel"
+				class="filter-item__input"
 				:options="weekdaysOptions"
 				option-label="displayValue"
 				option-value="programValue"
@@ -110,10 +110,10 @@ const isPaidOptions = [
 		</li>
 		<li>
 			<input
+				v-model.lazy="filterTimeModel"
 				type="text"
 				placeholder="Время в формате AA:AA"
 				class="filter-item__input base-input"
-				v-model.lazy="filterTimeModel"
 			/>
 		</li>
 	</ul>

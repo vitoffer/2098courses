@@ -41,29 +41,29 @@ const formattedSchedule = getFormattedSchedule(props.course.schedule)
 		</p>
 		<hr class="card__divider" />
 		<div
-			class="card__group"
 			v-if="course.address"
+			class="card__group"
 		>
 			<i class="pi pi-map-marker" />
 			<span class="card__address">{{ course.address }}</span>
 		</div>
 		<div
-			class="card__group"
 			v-if="course.teacher"
+			class="card__group"
 		>
 			<i class="pi pi-user" />
 			<span class="card__teacher">{{ course.teacher }}</span>
 		</div>
 		<div
-			class="card__group"
 			v-if="course.forAges"
+			class="card__group"
 		>
 			<i class="pi pi-star" />
 			<span class="card__age">{{ course.forAges }}</span>
 		</div>
 		<div
-			class="card__group"
 			v-if="formattedSchedule"
+			class="card__group"
 		>
 			<i class="pi pi-calendar" />
 			<span class="card__schedule">

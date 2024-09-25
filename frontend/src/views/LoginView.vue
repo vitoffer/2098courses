@@ -29,22 +29,22 @@ async function tryLogin() {
 
 <template>
 	<form
-		@submit.prevent="tryLogin"
 		id="loginForm"
 		class="form"
+		@submit.prevent="tryLogin"
 	>
 		<input
+			v-model="username"
 			class="base-input"
 			type="text"
 			placeholder="Логин"
-			v-model="username"
 			autocomplete="username"
 		/>
 		<input
+			v-model="password"
 			class="base-input"
 			type="password"
 			placeholder="Пароль"
-			v-model="password"
 			autocomplete="current-password"
 		/>
 		<button

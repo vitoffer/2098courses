@@ -4,10 +4,9 @@ import type { ICourse } from "@/types"
 import AutoComplete, {
 	type AutoCompleteCompleteEvent,
 } from "primevue/autocomplete"
-import MultiSelect from "primevue/multiselect"
 import Select from "primevue/select"
 import Textarea from "primevue/textarea"
-import { ref, toRefs, watchEffect } from "vue"
+import { ref, toRefs } from "vue"
 
 const courseModel = defineModel<ICourse>()
 
@@ -16,15 +15,6 @@ const {
 	addresses: filterAddressesOptions,
 	teachers: filterTeachersOptions,
 } = toRefs(useFilterOptionsStore())
-
-const weekdaysOrder = {
-	monday: 1,
-	tuesday: 2,
-	wednesday: 3,
-	thursday: 4,
-	friday: 5,
-	saturday: 6,
-}
 
 const scheduleModel = ref(courseModel.value.schedule)
 
@@ -142,100 +132,100 @@ const searchTeacher = (event: AutoCompleteCompleteEvent) => {
 <template>
 	<section class="dialog">
 		<input
+			v-model="courseModel!.name"
 			type="text"
 			class="base-input"
 			placeholder="Название"
-			v-model="courseModel!.name"
 		/>
 		<AutoComplete
+			v-model="courseModel.orientation"
 			placeholder="Направленность"
 			:suggestions="orientationItems"
-			v-model="courseModel.orientation"
 			pt:pc-input="base-input"
-			@complete="searchOrientation"
 			dropdown
+			@complete="searchOrientation"
 		/>
 		<Textarea
-			placeholder="Описание"
 			v-model="courseModel!.description"
+			placeholder="Описание"
 			fluid
 			auto-resize
 			rows="10"
 			class="base-input"
 		/>
 		<AutoComplete
+			v-model="courseModel.address"
 			placeholder="Адрес"
 			:suggestions="addressItems"
-			v-model="courseModel.address"
 			pt:pc-input="base-input"
-			@complete="searchAddress"
 			dropdown
+			@complete="searchAddress"
 		/>
 		<AutoComplete
+			v-model="courseModel!.teacher"
 			placeholder="Преподаватель"
 			:suggestions="teacherItems"
-			v-model="courseModel!.teacher"
 			pt:pc-input="base-input"
-			@complete="searchTeacher"
 			dropdown
+			@complete="searchTeacher"
 		/>
 		<input
+			v-model="courseModel.forAges"
 			type="text"
 			class="base-input input-schedule"
 			placeholder='Класс в формате "10,11" или "10-11"'
-			v-model="courseModel.forAges"
 		/>
 		<input
+			v-model="scheduleModel.monday"
 			type="text"
 			class="base-input"
 			placeholder="Время в понедельник"
-			v-model="scheduleModel.monday"
 		/>
 		<input
+			v-model="scheduleModel.tuesday"
 			type="text"
 			class="base-input"
 			placeholder="Время во вторник"
-			v-model="scheduleModel.tuesday"
 		/>
 		<input
+			v-model="scheduleModel.wednesday"
 			type="text"
 			class="base-input"
 			placeholder="Время в среду"
-			v-model="scheduleModel.wednesday"
 		/>
 		<input
+			v-model="scheduleModel.thursday"
 			type="text"
 			class="base-input"
 			placeholder="Время в четверг"
-			v-model="scheduleModel.thursday"
 		/>
 		<input
+			v-model="scheduleModel.friday"
 			type="text"
 			class="base-input"
 			placeholder="Время в пятницу"
-			v-model="scheduleModel.friday"
 		/>
 		<input
+			v-model="scheduleModel.saturday"
 			type="text"
 			class="base-input"
 			placeholder="Время в субботу"
-			v-model="scheduleModel.saturday"
 		/>
 
 		<Select
+			v-model="courseModel!.isPaid"
 			:options="[
 				{ name: 'Бесплатно', value: false },
 				{ name: 'Платно', value: true },
 			]"
-			v-model="courseModel!.isPaid"
 			option-label="name"
 			option-value="value"
 		/>
 		<input
+			v-model="courseModel!.url"
 			type="text"
 			class="base-input"
 			placeholder="Ссылка на mos.ru"
-			v-model="courseModel!.url"
 		/>
 		<div class="buttons">
 			<button

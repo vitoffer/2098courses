@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useEditCourseDialogStore } from "@/stores/editCourseDialog"
 import { useFilterModelsStore } from "@/stores/filterModels"
-import { ref, toRefs } from "vue"
+import { toRefs } from "vue"
 import { useRoute } from "vue-router"
 import FileUpload, { type FileUploadUploaderEvent } from "primevue/fileupload"
 
@@ -69,10 +69,10 @@ async function pushTable(tableName: string) {
 			<i class="pi pi-filter"></i>
 		</button>
 		<input
+			v-model="searchTextModel"
 			type="text"
 			placeholder="Поиск по названию"
 			class="search-bar base-input"
-			v-model="searchTextModel"
 		/>
 		<template v-if="route.fullPath.includes('admin')">
 			<button
@@ -87,8 +87,8 @@ async function pushTable(tableName: string) {
 				accept=".docx,.doc"
 				auto
 				custom-upload
-				@uploader="uploadTable"
 				choose-label="Загрузить таблицу"
+				@uploader="uploadTable"
 			/>
 		</template>
 	</section>
