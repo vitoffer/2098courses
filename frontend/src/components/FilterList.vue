@@ -112,7 +112,7 @@ const isPaidOptions = [
 			<input
 				v-model.lazy="filterTimeModel"
 				type="text"
-				placeholder="Время в формате AA:AA"
+				placeholder="Время в формате AA.AA"
 				class="filter-item__input base-input"
 			/>
 		</li>

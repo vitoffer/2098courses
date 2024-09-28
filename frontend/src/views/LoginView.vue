@@ -66,8 +66,10 @@ async function tryLogin() {
 	flex-direction: column;
 	align-items: center;
 	gap: 16px;
-	width: 400px;
+	width: 100%;
+	max-width: 400px;
 	margin: 0 auto;
+	padding: 0 16px;
 }
 
 .button {

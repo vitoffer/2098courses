@@ -150,8 +150,8 @@ const searchTeacher = (event: AutoCompleteCompleteEvent) => {
 			placeholder="Описание"
 			fluid
 			auto-resize
-			rows="10"
 			class="base-input"
+			rows="10"
 		/>
 		<AutoComplete
 			v-model="courseModel.address"
@@ -248,6 +248,14 @@ const searchTeacher = (event: AutoCompleteCompleteEvent) => {
 	color: var(--text-black) !important;
 }
 
+:deep(.p-textarea) {
+	overflow-y: scroll !important;
+
+	@media (max-width: 767px) {
+		min-height: 100px !important;
+	}
+}
+
 .buttons {
 	display: flex;
 	gap: 16px;
@@ -281,8 +289,12 @@ const searchTeacher = (event: AutoCompleteCompleteEvent) => {
 	display: flex;
 	flex-direction: column;
 	gap: 12px;
-	padding: 16px 16px 32px;
+	padding: 16px 16px 0;
 	width: 80vw;
 	max-width: 900px;
+}
+
+.p-dialog {
+	padding-bottom: 16px !important;
 }
 </style>

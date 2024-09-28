@@ -151,9 +151,22 @@ function showCoursePreview(courseId: number) {
 	gap: 16px;
 	padding: 0 16px 16px;
 
+	@media (max-width: 1360px) {
+		grid-template-columns: repeat(3, min(100%, 320px));
+	}
+
+	@media (max-width: 1030px) {
+		grid-template-columns: repeat(2, min(100%, 320px));
+	}
+
+	@media (max-width: 690px) {
+		grid-template-columns: repeat(1, min(100%, 320px));
+	}
+
 	&__item {
 		display: flex;
 		align-items: stretch;
+		justify-items: stretch;
 	}
 }
 </style>

@@ -45,6 +45,10 @@ const formattedSchedule = computed(() =>
 	flex-direction: column;
 	align-items: center;
 	gap: 16px;
+
+	p {
+		text-align: center;
+	}
 }
 
 .focus {

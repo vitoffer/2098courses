@@ -145,10 +145,6 @@ const formattedSchedule = getFormattedSchedule(props.course.schedule)
 	border-radius: 10px;
 	box-shadow: 0 0 8px 0 rgba(0 0 0 / 0.2);
 
-	@media (max-width: 380px) {
-		max-width: 270px;
-	}
-
 	p,
 	span {
 		font-size: 0.875rem;

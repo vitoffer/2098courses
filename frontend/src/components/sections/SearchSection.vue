@@ -89,7 +89,11 @@ async function pushTable(tableName: string) {
 				custom-upload
 				choose-label="Загрузить таблицу"
 				@uploader="uploadTable"
-			/>
+			>
+				<template #chooseicon>
+					<i class="pi pi-plus"></i>
+				</template>
+			</FileUpload>
 		</template>
 	</section>
 </template>
@@ -98,6 +102,7 @@ async function pushTable(tableName: string) {
 .search {
 	display: flex;
 	justify-content: center;
+	align-items: center;
 	gap: 8px;
 	margin-bottom: 16px;
 	padding: 0 16px;
@@ -119,6 +124,18 @@ async function pushTable(tableName: string) {
 			width: 90vw;
 			padding-inline: 8px;
 		}
+	}
+
+	:deep(.p-fileupload) {
+		width: max-content;
+	}
+
+	:deep(.pi-plus) {
+		font-size: 1rem !important;
+	}
+
+	:deep(.p-button-label) {
+		font-size: 0.875rem;
 	}
 }
 

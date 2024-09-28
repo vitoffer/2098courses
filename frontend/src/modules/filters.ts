@@ -111,7 +111,7 @@ export function isCourseFitWeekday(
 	weekdays: TFilterWeekday[],
 ) {
 	return Object.keys(course.schedule).some((courseWeekday) => {
-		if (course.schedule[courseWeekday] === null) return
+		if (!course.schedule[courseWeekday]) return false
 
 		return weekdays.some((selectedWeekday) => courseWeekday === selectedWeekday)
 	})
