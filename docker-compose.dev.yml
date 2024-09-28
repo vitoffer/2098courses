@@ -1,0 +1,15 @@
+services:
+  frontend:
+    container_name: do2098
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8080:80"
+    environment:
+      - VITE_BASE_API_URL=${VITE_BASE_API_URL}
+    networks:
+      - network-do2098
+
+networks:
+  network-do2098:
