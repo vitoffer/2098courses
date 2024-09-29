@@ -12,7 +12,7 @@ from .models import DeleteTables, UploadTabelToDb, CourseType, ScheduleType
 from conf.settings import BASE_DIR
 from fastapi import APIRouter, UploadFile, Depends, HTTPException, status
 from routers.auth import get_current_active_super_user, User
-from conf.depencies import check_is_super_user
+from conf.depencies import check_api_token
 
 import bs4
 import requests
@@ -42,7 +42,7 @@ DAYS = [
 router = APIRouter(
     prefix='/admin',
     tags=['admin'],
-    # dependencies=[Depends(check_is_super_user)],
+    dependencies=[Depends(check_api_token)],
 )
 
 

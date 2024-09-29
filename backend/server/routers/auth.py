@@ -16,10 +16,11 @@ from conf.settings import (
     EXPIRE_DELTA,
     PWD_CONTEXT,
 )
-from conf.depencies import get_password_hash
+from conf.depencies import get_password_hash, check_api_token
 
 router = APIRouter(
     prefix='/auth',
+    dependencies=[Depends(check_api_token)],
 )
 
 
