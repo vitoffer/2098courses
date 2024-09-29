@@ -4,11 +4,12 @@ from fastapi import APIRouter, Depends, Path
 from models.database import get_session
 from models.models import Course
 from sqlmodel import Session, select, text
-# from conf.depencies import check_is_super_user
+from conf.depencies import check_api_token
 
 router = APIRouter(
     prefix='/courses',
     tags=['courses'],
+    dependencies=[Depends(check_api_token)],
 )
 
 
